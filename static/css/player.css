@@ -1,0 +1,60 @@
+#player-1 {
+    height: 90vh;
+    width: 40vw;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#word span {
+    padding: 1rem 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 2px solid black;
+    display: inline-block;
+    margin-block: 5px;
+}
+
+.correct-letter {
+    background-color: rgb(132 204 22);
+}
+
+.incorrect-letter {
+    background-color: rgb(244 63 94);
+}
+.side-player-panel .card{
+    max-width: 45%;
+}
+.side-player-panel{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+}
+body{
+    height: 100vh;
+    display: flex;
+    place-items: center;
+    background-color: #dedede;
+}
+h3{
+    font-size: 3rem !important;
+    padding-bottom: 2rem;
+}
+#word-input,
+#basic-addon1{
+    border: 2px solid #000;
+    border-radius: 0px;
+}
+.card{
+    border-radius: 0px;
+    border: 1.5px solid #646464;
+    padding-block: 3rem;
+}
+#player-1{
+    border: 10px solid #9e29a0;
+}
