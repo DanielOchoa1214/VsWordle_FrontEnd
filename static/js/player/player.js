@@ -2,21 +2,24 @@ let player = (function (api) {
     // Atributos
     let _publicFunctions = {};
     let _wordInput = $("#word-input");
-    let _round = 3;
-    let _nickname = "";
+    let _round = 0;
+    let _nickname = "DANO";
     let _mistakes = [];
     let _currentWord = "";
 
     // Funciones privadas
-    let _renderWord = (round) => {
-        _currentWord = api.getWord(round);
-        let markup = "";
-        let letterPos = 0;
-        [..._currentWord].forEach(letter => {
-            markup = markup.concat(`<span data-letter-pos="${letterPos}">${letter}</span>\n`);
-            letterPos++;
+    let _renderWord = () => {
+        api.getWord(_round).then((res) => {
+            _currentWord = res; 
+            let markup = "";
+            let letterPos = 0;
+            [..._currentWord].forEach(letter => {
+                markup = markup.concat(`<span data-letter-pos="${letterPos}">${letter}</span>\n`);
+                letterPos++;
+            });
+            $("#word").html(markup);
         });
-        $("#word").html(markup);
+        
     };
 
     let _correctLetter = (letterPos) => {
@@ -35,11 +38,27 @@ let player = (function (api) {
         return [..._currentWord][letterPos] === letter && _mistakes.length === 0;
     };
 
+    let _tryGetNextWord = (letterPos) => {
+        if(_currentWord.length === letterPos + 1) {
+            let word = _wordInput.val();
+            api.checkWord(word, _round, _nickname).then((res) => {
+                if(res){
+                    _round++;
+                    _renderWord();
+                    _wordInput.val("");
+                }
+            }).catch((err) => {
+                // Resar que no pase :(
+            });
+        }
+    };
+
     let _renderLetter = () => {
         let letterPos = _wordInput.val().length - 1;
         let letter = _wordInput.val().slice(-1);
         if(_checkLetter(letterPos, letter)){
             _correctLetter(letterPos);
+            _tryGetNextWord(letterPos);
         } else  {
             _incorrectLetter(letterPos);
         }
@@ -61,13 +80,19 @@ let player = (function (api) {
         }
     };
 
+    let _setNickname = () => {
+        _nickname = prompt("Cual sera tu Nickname?");
+        $("#main-player-nick").text(_nickname);
+    };
+
     // Funciones publicas
     _publicFunctions.init = function () {  
-        _renderWord(3);
+        // Cuando se necesite añadir el _setNickname
+        _renderWord();
         _wordInput.on("input", _renderLetter);
         _wordInput.on("keydown", _deleteLetter);
     };
 
 
     return _publicFunctions;
-})(apimock);
+})(apiclient);
