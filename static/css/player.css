@@ -1,6 +1,13 @@
 #player-1 {
     height: 90vh;
-    width: 40vw;
+    width: 100%;
+    border: 10px solid #9e29a0;
+    align-items: center;
+}
+.main-player{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .player {
@@ -34,15 +41,17 @@
     flex-direction: column;
     justify-content: center;
     gap: 2rem;
+    
 }
 body{
     height: 100vh;
     display: flex;
     place-items: center;
     background-color: #dedede;
+    box-sizing: border-box;
 }
 h3{
-    font-size: 3rem !important;
+    font-size: 3rem;
     padding-bottom: 2rem;
 }
 #word-input,
@@ -53,8 +62,18 @@ h3{
 .card{
     border-radius: 0px;
     border: 1.5px solid #646464;
-    padding-block: 3rem;
+    padding-block: 1.5rem;
 }
-#player-1{
-    border: 10px solid #9e29a0;
+
+@media (max-width:1000px) {
+    .side-player-panel #word span{
+        padding: .5rem;
+    }
+    .side-player-panel h3{
+        font-size: 2rem;
+        padding-bottom: .5rem;
+    }
+    .card{
+        padding-block: .5rem;
+    }
 }
