@@ -77,3 +77,7 @@ h3{
         padding-block: .5rem;
     }
 }
+
+.available {
+    display: none;
+}

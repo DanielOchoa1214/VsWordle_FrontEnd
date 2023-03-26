@@ -26,5 +26,26 @@ let apiclient = (function (){
         });
     };
 
+    _publicFunctions.joinGame = function (nickname) {
+        return $.ajax({
+            url: `${_server}/lobbies`,
+            type: 'POST',
+            data: JSON.stringify({
+                nickname: nickname,
+            }),
+            contentType: "application/json"
+        });
+    }
+
+    _publicFunctions.missingPlayers = function (host) {
+        return $.ajax({
+            url: `${_server}/lobbies/players/missing`,
+            type: 'GET',
+            data: {
+                host: host,
+            },
+            contentType: "application/json"
+        });
+    }
     return _publicFunctions;
 })();

@@ -81,12 +81,51 @@ let player = (function (api) {
     };
 
     let _setNickname = () => {
-        _nickname = prompt("Cual sera tu Nickname?");
-        $("#main-player-nick").text(_nickname);
+        _nickname = $("#nickname").val();
     };
 
+    let _joinGame = () => {
+        _setNickname();
+        api.joinGame(_nickname).then((res)=>{
+            if(res) {
+                stompClient.send(`/app/joinGame`, {}, JSON.stringify({nickname:_nickname}));
+            } else {
+                alert("Fuera!!!! Eres el que sobra")
+            }
+        });
+    }
+
+    let _connectAndSubscribe = () => {
+        console.info('Connecting to WS...');
+        let socket = new SockJS('http://localhost:8080/stompendpoint');
+        stompClient = Stomp.over(socket);
+        //subscribe to /topic/TOPICXX when connections succeed
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe(`/topic/joinGame`, function (eventbody) {
+                let player=JSON.parse(eventbody.body);
+                if(player.nickname === _nickname) {
+                    $("#main-player-nick").text(_nickname);
+                    api.missingPlayers(_nickname).then((res)=>{
+                        res.forEach(element => {
+                            $(".available").first().attr("id", element);
+                            $(`#${element} h3`).text(element);
+                            $(`#${element}`).removeClass("available");
+                        });
+                    });
+                } else {
+                    $(".available").first().attr("id", player.nickname);
+                    $(`#${player.nickname} h3`).text(player.nickname);
+                    $(`#${player.nickname}`).removeClass("available");
+                    console.log(player.nickname);
+                }
+            });
+        });
+    };
     // Funciones publicas
-    _publicFunctions.init = function () {  
+    _publicFunctions.init = function () {
+        _connectAndSubscribe()
+        $("#set-nickname").click(()=>_joinGame());
         // Cuando se necesite añadir el _setNickname
         _renderWord();
         _wordInput.on("input", _renderLetter);
