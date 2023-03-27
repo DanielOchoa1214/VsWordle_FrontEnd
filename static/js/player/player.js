@@ -14,7 +14,7 @@ let player = (function (api) {
             let markup = "";
             let letterPos = 0;
             [..._currentWord].forEach(letter => {
-                markup = markup.concat(`<span data-letter-pos="${letterPos}">${letter}</span>\n`);
+                markup = markup.concat(`<span data-letter-pos="${letterPos}">${letter}</span>`);
                 letterPos++;
             });
             $(`#${player} .word`).first().html(markup);

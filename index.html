@@ -12,30 +12,33 @@
             crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"
             integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-        <script src="./resources/sockjs.min.js"></script>
-        <script src="./resources/stomp.min.js"></script>
+        <script src="./static/js/resources/sockjs.min.js"></script>
+        <script src="./static/js/resources/stomp.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+        <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
         <link rel="stylesheet" href="./static/css/player.css">
+        <link rel="stylesheet" href="./static/css/register.css">
         <title>VsWordle</title>
     </head>
     <body onload="register.init()">
-        <div id="register-screen">
-            <p>Ingresa tu Nickname: </p>
-            <input id="nickname" type="text">
-            <button id="set-nickname">JOIN</button>
+        <div id="register-screen" class="nes-container">
+            <h2>Ingresa tu Nickname: </h2>
+            <input id="nickname" type="text" class="nes-input">
+            <button id="set-nickname" class="nes-btn is-success">JOIN</button>
         </div>
         <div id="game-screen" class="container not-in-screen">
-
             <div class="row">
                 <div class="main-player col-6">
-                    <div class="player-1 player card">
+                    <div class="player-1 player card nes-container">
                         <div>
-                            <h3 id="main-player-nick">DANO</h3>
+                            <i class="nes-squirtle"></i>
+                            <h3 id="main-player-nick"></h3>
                         </div>
                         <div>
                             <p class="word" class="mb-6">ESPERANDO</p>
                             <div class="input-group mt-6">
                                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-joystick"></i></span>
-                                <input id="word-input" type="text" class="form-control" placeholder="Escribe la palabra !!!"
+                                <input id="word-input" type="text" class="nes-input not-in-screen" placeholder="Escribe la palabra !!!"
                                     aria-describedby="basic-addon1">
                             </div>
                         </div>
@@ -43,16 +46,18 @@
                 </div>
                 <div class="side-player-panel col-6 container">
                     <div class="row justify-content-around">
-                        <div id="player-2" class="player card available">
+                        <div id="player-2" class="player card available nes-container">
                             <div>
+                                <i class="nes-bulbasaur"></i>
                                 <h3>AVAILABLE</h3>
                             </div>
                             <div>
                                 <p class="word" class="mb-6">ESPERANDO</p>
                             </div>
                         </div>
-                        <div id="player-3" class="player card available">
+                        <div id="player-3" class="player card available nes-container">
                             <div>
+                                <i class="nes-charmander"></i>
                                 <h3>AVAILABLE</h3>
                             </div>
                             <div>
@@ -61,16 +66,18 @@
                         </div>
                     </div>
                     <div class="row justify-content-around">
-                        <div id="player-4" class="player card available">
+                        <div id="player-4" class="player card available nes-container">
                             <div>
-                                <h3>AVAILABLE</h3>
+                                <i class="nes-kirby"></i>
+                                <h3></i>AVAILABLE</h3>
                             </div>
                             <div>
                                 <p class="word" class="mb-6">ESPERANDO</p>
                             </div>
                         </div>
-                        <div id="player-5" class="player card available">
+                        <div id="player-5" class="player card available nes-container">
                             <div>
+                                <i class="nes-pokeball"></i>
                                 <h3>AVAILABLE</h3>
                             </div>
                             <div>
@@ -80,7 +87,10 @@
                     </div>
                 </div>
             </div>
-            <button onclick="player.startGame()">Start</button>
+            <button onclick="player.startGame()" class="nes-btn is-success">Start</button>
+        </div>
+        <div id="end-game-screen">
+
         </div>
         <script src="./static/js/enviroment.js"></script>
         <script src="./static/js/player/playerClient.js"></script>

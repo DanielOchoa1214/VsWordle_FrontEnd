@@ -40,6 +40,7 @@ let socketSetUp = (function () {
 
         stompClient.subscribe("/topic/requestNext", eventbody => {
             _requestWords();
+            $("#word-input").removeClass("not-in-screen")
             $("#word-input").focus();
         });
 
