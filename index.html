@@ -17,25 +17,22 @@
         <link rel="stylesheet" href="./static/css/player.css">
         <title>VsWordle</title>
     </head>
-    <body onload="player.init()">
-        <div>
+    <body onload="register.init()">
+        <div id="register-screen">
+            <p>Ingresa tu Nickname: </p>
             <input id="nickname" type="text">
-            <button id="set-nickname">Ok</button>
+            <button id="set-nickname">JOIN</button>
         </div>
-        <div id="game-screen" class="container">
+        <div id="game-screen" class="container not-in-screen">
+
             <div class="row">
                 <div class="main-player col-6">
-                    <div id="player-1" class="player card">
+                    <div class="player-1 player card">
                         <div>
                             <h3 id="main-player-nick">DANO</h3>
                         </div>
                         <div>
-                            <p id="word" class="mb-6">
-                                <span class="correct-letter">h</span>
-                                <span class="correct-letter">o</span>
-                                <span class="incorrect-letter">l</span>
-                                <span>a</span>
-                            </p>
+                            <p class="word" class="mb-6">ESPERANDO</p>
                             <div class="input-group mt-6">
                                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-joystick"></i></span>
                                 <input id="word-input" type="text" class="form-control" placeholder="Escribe la palabra !!!"
@@ -48,72 +45,49 @@
                     <div class="row justify-content-around">
                         <div id="player-2" class="player card available">
                             <div>
-                                <h3>DANO</h3>
+                                <h3>AVAILABLE</h3>
                             </div>
                             <div>
-                                <p id="word" class="mb-6">
-                                    <span class="correct-letter">h</span>
-                                    <span class="correct-letter">o</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span>a</span>
-                                </p>
+                                <p class="word" class="mb-6">ESPERANDO</p>
                             </div>
                         </div>
                         <div id="player-3" class="player card available">
                             <div>
-                                <h3>DANO</h3>
+                                <h3>AVAILABLE</h3>
                             </div>
                             <div>
-                                <p id="word" class="mb-6">
-                                    <span class="correct-letter">h</span>
-                                    <span class="correct-letter">o</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span>a</span>
-                                </p>
+                                <p class="word" class="mb-6">ESPERANDO</p>
                             </div>
                         </div>
                     </div>
                     <div class="row justify-content-around">
                         <div id="player-4" class="player card available">
                             <div>
-                                <h3>DANO</h3>
+                                <h3>AVAILABLE</h3>
                             </div>
                             <div>
-                                <p id="word" class="mb-6">
-                                    <span class="correct-letter">h</span>
-                                    <span class="correct-letter">o</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span>a</span>
-                                </p>
+                                <p class="word" class="mb-6">ESPERANDO</p>
                             </div>
                         </div>
                         <div id="player-5" class="player card available">
                             <div>
-                                <h3>DANO</h3>
+                                <h3>AVAILABLE</h3>
                             </div>
                             <div>
-                                <p id="word" class="mb-6">
-                                    <span class="correct-letter">h</span>
-                                    <span class="correct-letter">o</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span class="incorrect-letter">l</span>
-                                    <span>a</span>
-                                </p>
+                                <p class="word" class="mb-6">ESPERANDO</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <button onclick="player.startGame()">Start</button>
         </div>
         <script src="./static/js/enviroment.js"></script>
-        <script src="./static/js/player/apimock.js"></script>
-        <script src="./static/js/player/apiclient.js"></script>
+        <script src="./static/js/player/playerClient.js"></script>
         <script src="./static/js/player/player.js"></script>
+        <script src="./static/js/sockets/socketSetUp.js"></script>
+        <script src="./static/js/register/registerClient.js"></script>
+        <script src="./static/js/register/register.js"></script>
     </body>
 
 </html>

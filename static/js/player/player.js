@@ -2,13 +2,13 @@ let player = (function (api) {
     // Atributos
     let _publicFunctions = {};
     let _wordInput = $("#word-input");
-    let _round = 0;
+    let _round = -1;
     let _nickname = "DANO";
     let _mistakes = [];
     let _currentWord = "";
 
     // Funciones privadas
-    let _renderWord = () => {
+    let _renderWord = (player) => {
         api.getWord(_round).then((res) => {
             _currentWord = res; 
             let markup = "";
@@ -17,21 +17,25 @@ let player = (function (api) {
                 markup = markup.concat(`<span data-letter-pos="${letterPos}">${letter}</span>\n`);
                 letterPos++;
             });
-            $("#word").html(markup);
+            $(`#${player} .word`).first().html(markup);
         });
         
     };
 
-    let _correctLetter = (letterPos) => {
-        $(`#word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
-        $(`#word span[data-letter-pos='${letterPos}']`).addClass("correct-letter");
-        _mistakes = _mistakes.filter(x => x !== letterPos);
+    let _correctLetter = (letterPos, nickname) => {
+        $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
+        $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).addClass("correct-letter");
+        if(nickname === _nickname) {
+            _mistakes = _mistakes.filter(x => x !== letterPos);
+        }
     };
 
-    let _incorrectLetter = (letterPos) => {
-        $(`#word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
-        $(`#word span[data-letter-pos='${letterPos}']`).addClass("incorrect-letter");
-        _mistakes.push(letterPos);
+    let _incorrectLetter = (letterPos, nickname) => {
+        $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
+        $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).addClass("incorrect-letter");
+        if(nickname === _nickname){
+            _mistakes.push(letterPos);
+        }
     };
 
     let _checkLetter = (letterPos, letter) => {
@@ -43,95 +47,95 @@ let player = (function (api) {
             let word = _wordInput.val();
             api.checkWord(word, _round, _nickname).then((res) => {
                 if(res){
-                    _round++;
-                    _renderWord();
-                    _wordInput.val("");
+                    stompClient.send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
                 }
-            }).catch((err) => {
-                // Resar que no pase :(
             });
         }
     };
 
-    let _renderLetter = () => {
+    let _sendLetter = (event, isDelete) => {
         let letterPos = _wordInput.val().length - 1;
         let letter = _wordInput.val().slice(-1);
-        if(_checkLetter(letterPos, letter)){
-            _correctLetter(letterPos);
-            _tryGetNextWord(letterPos);
-        } else  {
-            _incorrectLetter(letterPos);
+        let data = {
+            nickname: _nickname,
+            isDelete: isDelete,
+            letterPos: letterPos,
+            correct: _checkLetter(letterPos, letter),
         }
-    };
-
-    let _renderDelete = () => {
-        let letterPos = _wordInput.val().length - 1;
-        $(`#word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
-        $(`#word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
-        _mistakes = _mistakes.filter(x => x !== letterPos);
-        _wordInput.val(_wordInput.val().slice(0, -1));
-    };
-
-    let _deleteLetter = (event) => {
-        var key = event.keyCode || event.charCode;
-        if( key == 8 || key == 46 ){
-            event.preventDefault();
-            _renderDelete();
-        }
-    };
-
-    let _setNickname = () => {
-        _nickname = $("#nickname").val();
-    };
-
-    let _joinGame = () => {
-        _setNickname();
-        api.joinGame(_nickname).then((res)=>{
-            if(res) {
-                stompClient.send(`/app/joinGame`, {}, JSON.stringify({nickname:_nickname}));
-            } else {
-                alert("Fuera!!!! Eres el que sobra")
-            }
-        });
+        stompClient.send("/topic/sendLetter", {}, JSON.stringify(data));
     }
 
-    let _connectAndSubscribe = () => {
-        console.info('Connecting to WS...');
-        let socket = new SockJS('http://localhost:8080/stompendpoint');
-        stompClient = Stomp.over(socket);
-        //subscribe to /topic/TOPICXX when connections succeed
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe(`/topic/joinGame`, function (eventbody) {
-                let player=JSON.parse(eventbody.body);
-                if(player.nickname === _nickname) {
-                    $("#main-player-nick").text(_nickname);
-                    api.missingPlayers(_nickname).then((res)=>{
-                        res.forEach(element => {
-                            $(".available").first().attr("id", element);
-                            $(`#${element} h3`).text(element);
-                            $(`#${element}`).removeClass("available");
-                        });
-                    });
-                } else {
-                    $(".available").first().attr("id", player.nickname);
-                    $(`#${player.nickname} h3`).text(player.nickname);
-                    $(`#${player.nickname}`).removeClass("available");
-                    console.log(player.nickname);
-                }
-            });
-        });
+    let _renderLetter = (event) => {
+        if(event.isDelete){
+            _renderDelete(event.letterPos, event.nickname);
+            return;
+        } else {
+            if(event.correct){
+                _correctLetter(event.letterPos, event.nickname);
+                _tryGetNextWord(event.letterPos);
+            } else  {
+                _incorrectLetter(event.letterPos, event.nickname);
+            }
+        }
+    };
+
+    let _renderDelete = (letterPos, nickname) => {
+        $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
+        $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
+        if(nickname === _nickname){
+            _mistakes = _mistakes.filter(x => x !== letterPos);
+            _wordInput.val(_wordInput.val().slice(0, -1));
+        }
+    };
+
+    let _renderPlayer = (element) => {
+        $(".available").first().attr("id", element);
+        $(`#${element} h3`).text(element);
+        $(`#${element}`).removeClass("available");
     };
     // Funciones publicas
     _publicFunctions.init = function () {
-        _connectAndSubscribe()
-        $("#set-nickname").click(()=>_joinGame());
-        // Cuando se necesite añadir el _setNickname
-        _renderWord();
-        _wordInput.on("input", _renderLetter);
-        _wordInput.on("keydown", _deleteLetter);
+        _wordInput.on("keydown", (event) => {
+            let key = event.keyCode || event.charCode;
+            if(key == 8 || key == 46){
+                event.preventDefault();
+                _sendLetter(event, true);
+            }
+        });
+        _wordInput.on("input", (event) => {
+            _sendLetter(event, false);
+        });
     };
 
+    _publicFunctions.renderLetter = function (event) {  
+        _renderLetter(event);
+    };
+
+    _publicFunctions.getNickname = function () {  
+        return _nickname;
+    };
+
+    _publicFunctions.setNickname = function (newNickname) {  
+        _nickname = newNickname;
+    };
+
+    _publicFunctions.renderPlayer = function (player) {  
+        _renderPlayer(player)
+    };
+
+    _publicFunctions.renderWord = function (player) {  
+        _renderWord(player)
+    };
+
+    _publicFunctions.endRound = function () {  
+        _round++;
+        _mistakes = [];
+    };
+
+    _publicFunctions.startGame = () => {
+        stompClient.send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
+    };
 
     return _publicFunctions;
-})(apiclient);
+
+})(playerclient);

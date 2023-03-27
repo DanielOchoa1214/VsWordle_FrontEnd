@@ -1,4 +1,4 @@
-#player-1 {
+.player-1 {
     height: 90vh;
     width: 100%;
     border: 10px solid #9e29a0;
@@ -17,7 +17,7 @@
     align-items: center;
 }
 
-#word span {
+.word span {
     padding: 1rem 1rem;
     text-transform: uppercase;
     font-weight: 700;
@@ -54,19 +54,18 @@ h3{
     font-size: 3rem;
     padding-bottom: 2rem;
 }
-#word-input,
+.word-input,
 #basic-addon1{
     border: 2px solid #000;
     border-radius: 0px;
 }
 .card{
     border-radius: 0px;
-    border: 1.5px solid #646464;
     padding-block: 1.5rem;
 }
 
 @media (max-width:1000px) {
-    .side-player-panel #word span{
+    .side-player-panel .word span{
         padding: .5rem;
     }
     .side-player-panel h3{
@@ -79,5 +78,9 @@ h3{
 }
 
 .available {
+    display: none;
+}
+
+.not-in-screen {
     display: none;
 }

@@ -1,4 +1,4 @@
-let apiclient = (function (){
+let playerclient = (function (){
     // Atributos
     let _publicFunctions = {};
     let _server = enviroment.local;
@@ -26,17 +26,6 @@ let apiclient = (function (){
         });
     };
 
-    _publicFunctions.joinGame = function (nickname) {
-        return $.ajax({
-            url: `${_server}/lobbies`,
-            type: 'POST',
-            data: JSON.stringify({
-                nickname: nickname,
-            }),
-            contentType: "application/json"
-        });
-    }
-
     _publicFunctions.missingPlayers = function (host) {
         return $.ajax({
             url: `${_server}/lobbies/players/missing`,
@@ -46,6 +35,14 @@ let apiclient = (function (){
             },
             contentType: "application/json"
         });
-    }
+    };
+
+    _publicFunctions.getPlayers = function () {  
+        return $.ajax({
+            url: `${_server}/lobbies/players`,
+            type: 'GET',
+        });
+    };
+
     return _publicFunctions;
 })();
