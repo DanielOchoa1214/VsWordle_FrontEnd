@@ -1,2 +1,10 @@
 #register-screen {
+    width: 100%;
+    display: flex;
+    place-content: center;
+}
+#set-nickname{
+    margin-inline: auto;
+    display: block;
+    margin-top: 2rem;
 }
