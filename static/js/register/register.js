@@ -9,6 +9,8 @@ let register = (function (api) {
         api.joinGame(_nickname).then((res)=>{
             if(res) {
                 stompClient.send(`/topic/joinGame`, {}, JSON.stringify({nickname: _nickname}));
+                $("#game-screen").removeClass("not-in-screen");
+                $("#register-screen").addClass("not-in-screen");
             } else {
                 alert("Fuera!!!! Eres el que sobra :(")
             }
@@ -18,10 +20,18 @@ let register = (function (api) {
     _publicFunctions.init = function () {  
         $("#set-nickname").click(() => {
             _joinGame();
-            $("#game-screen").removeClass("not-in-screen");
-            $("#register-screen").addClass("not-in-screen");
             player.init();
         });
+        // Luego mover la musica al menu principal
+        let playAttempt = setInterval(() => {
+                $("#background-music")[0].play().then(() => {
+                    clearInterval(playAttempt);
+                })
+                .catch(() => {
+                    console.log("Esperando a que el usuario interactue con la pagina para iniciar la musica...");
+                });
+            }, 3000);
+        $("#background-music")[0].volume = 0;
     };
 
     return _publicFunctions;

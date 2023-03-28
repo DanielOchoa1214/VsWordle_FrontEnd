@@ -4,26 +4,16 @@ let socketSetUp = (function () {
 
     let _joinGame = (eventbody) => {
         let playerBody = JSON.parse(eventbody.body);
-        let _nickname = player.getNickname();
-        if(playerBody.nickname === _nickname) {
-            $(".player-1").first().attr("id", _nickname);
-            $("#main-player-nick").text(_nickname);
-            playerclient.missingPlayers(_nickname).then((res) => {
-                res.forEach(element => {
-                    player.renderPlayer(element);
-                });
-            });
-        } else {
-            player.renderPlayer(playerBody.nickname);
-        }
+        player.join(playerBody);
     };
 
-    let _requestWords = () => {
+    let _requestWords = (winner) => {
         $("#word-input").val("");
         player.endRound();
         playerclient.getPlayers().then((res) => {
-            res.forEach(e => player.renderWord(e.nickname));
+            res.forEach(e => player.renderWord(e.nickname, winner));
         });
+        player.roundWonLost(player.getNickname() === winner);
     };
 
     let _checkLetter = (event) => {
@@ -39,7 +29,8 @@ let socketSetUp = (function () {
         });
 
         stompClient.subscribe("/topic/requestNext", eventbody => {
-            _requestWords();
+            let winner = JSON.parse(eventbody.body).nickname;
+            _requestWords(winner);
             $("#word-input").removeClass("not-in-screen")
             $("#word-input").focus();
         });
