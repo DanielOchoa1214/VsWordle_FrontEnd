@@ -31,7 +31,8 @@ let socketSetUp = (function () {
         stompClient.subscribe("/topic/requestNext", eventbody => {
             let winner = JSON.parse(eventbody.body).nickname;
             _requestWords(winner);
-            $("#word-input").removeClass("not-in-screen")
+            $("#joystick").removeClass("not-in-screen");
+            $("#word-input").removeClass("not-in-screen");
             $("#word-input").focus();
         });
 
