@@ -63,7 +63,7 @@
             </div>
             <div class="side-player-panel col-6 container">
                 <div class="row justify-content-around">
-                    <div id="player-2" class="player card available nes-container">
+                    <div class="player card available nes-container">
                         <div>
                             <div class="icon-box">
                                 <i class="nes-bulbasaur pokemon-xs"></i>
@@ -74,7 +74,7 @@
                             <p class="word" class="mb-6">ESPERANDO</p>
                         </div>
                     </div>
-                    <div id="player-3" class="player card available nes-container">
+                    <div class="player card available nes-container">
                         <div>
                             <div class="icon-box">
                                 <i class="nes-charmander pokemon-xs"></i>
@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <div class="row justify-content-around">
-                    <div id="player-4" class="player card available nes-container">
+                    <div class="player card available nes-container">
                         <div>
                             <div class="icon-box">
                                 <i class="nes-kirby pokemon-xs"></i>
@@ -98,7 +98,7 @@
                             <p class="word" class="mb-6">ESPERANDO</p>
                         </div>
                     </div>
-                    <div id="player-5" class="player card available nes-container">
+                    <div class="player card available nes-container">
                         <div>
                             <div class="icon-box">
                                 <i class="nes-pokeball pokemon-xs"></i>
@@ -112,10 +112,13 @@
                 </div>
             </div>
         </div>
-        <button onclick="player.startGame()" class="nes-btn is-success start-btn">Start</button>
+        <button id="start-game" onclick="player.startGame()" class="nes-btn is-success start-btn">Start</button>
     </div>
-    <div id="end-game-screen">
-
+    <div id="end-game-screen" class="not-in-screen">
+        <h2>GANADOR</h2>
+        <h4 id="winner"></h4>
+        <button id="play-again" class="nes-btn is-warning" onclick="player.backToLobby()">Volver a jugar</button>
+        <button id="back-to-menu" class="nes-btn is-warning">Volver al menu</button>
     </div>
     <script src="./static/js/enviroment.js"></script>
     <script src="./static/js/player/playerClient.js"></script>

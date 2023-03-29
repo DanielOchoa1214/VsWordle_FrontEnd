@@ -12,11 +12,11 @@ let player = (function (api) {
         if(_round !== 0){
             console.log(imTheWinner);
             if(imTheWinner) {
-                console.log("PUTOOOO");
                 $("#correct-word")[0].play();
+                $("#correct-word")[0].volume = 0.05;
             } else  {
-                console.log("PUTAAAA");
                 $("#incorrect-word")[0].play();
+                $("#incorrect-word")[0].volume = 0.05;
             }
         }
     };
@@ -52,7 +52,7 @@ let player = (function (api) {
     };
 
     let _tryGetNextWord = (letterPos) => {
-        if(_currentWord.length === letterPos + 1) {
+        if(_currentWord.length === letterPos + 1 && _round !== 9) {
             let word = _wordInput.val();
             api.checkWord(word, _round, _nickname).then((res) => {
                 if(res){
@@ -62,29 +62,55 @@ let player = (function (api) {
         }
     };
 
-    let _sendLetter = (isDelete) => {
+    let _sendDeletion = () => {
+        let letterPos = _wordInput.val().length - 1;
+        let data = {
+            nickname: _nickname,
+            letterPos: letterPos,
+        }
+        stompClient.send("/topic/deleteLetter", {}, JSON.stringify(data));
+    }
+
+    let _sendLetter = () => {
         let letterPos = _wordInput.val().length - 1;
         let letter = _wordInput.val().slice(-1);
         let data = {
             nickname: _nickname,
-            isDelete: isDelete,
             letterPos: letterPos,
             correct: _checkLetter(letterPos, letter),
         }
         stompClient.send("/topic/sendLetter", {}, JSON.stringify(data));
     };
 
+    let _tryEndGame = (letterPos) => {
+        if(_round === 9 && _currentWord.length === letterPos + 1) {
+            stompClient.send("/app/endGame", {}, {});
+        }
+    };
+
+    let _endGame = (winner) => {
+        console.log("GANESTEEE: " + JSON.stringify(winner));
+        $("#winner").text(winner.nickname);
+        $("#end-game-screen").removeClass("not-in-screen");
+        $("#game-screen").addClass("not-in-screen");
+        $(".word").text("ESPERANDO");
+        $("#start-game").removeClass("not-in-screen");
+        _wordInput.addClass("not-in-screen");
+        _wordInput.val("");
+        $("#joystick").addClass("not-in-screen");
+        $(".side-player-panel .player").addClass("available");
+        _round = -1;
+        _wordInput.off("keydown");
+        _wordInput.off("input");
+    };
+
     let _renderLetter = (event) => {
-        if(event.isDelete){
-            _renderDelete(event.letterPos, event.nickname);
-            return;
-        } else {
-            if(event.correct){
-                _correctLetter(event.letterPos, event.nickname);
-                _tryGetNextWord(event.letterPos);
-            } else  {
-                _incorrectLetter(event.letterPos, event.nickname);
-            }
+        if(event.correct){
+            _correctLetter(event.letterPos, event.nickname);
+            _tryGetNextWord(event.letterPos);
+            _tryEndGame(event.letterPos);
+        } else  {
+            _incorrectLetter(event.letterPos, event.nickname);
         }
     };
 
@@ -94,7 +120,7 @@ let player = (function (api) {
         _publicFunctions.runIfItsMe(nickname, () => {
             _mistakes = _mistakes.filter(x => x !== letterPos);
             _wordInput.val(_wordInput.val().slice(0, -1));
-        })
+        });
     };
 
     let _renderPlayer = (element) => {
@@ -104,16 +130,20 @@ let player = (function (api) {
     };
 
     let _join = (playerBody) => {
+        console.log(JSON.stringify(playerBody));
+        console.log(_nickname);
         _publicFunctions.runIfItsMe(playerBody.nickname, () => {
             $(".player-1").first().attr("id", _nickname);
             $("#main-player-nick").text(_nickname);
             playerclient.missingPlayers(_nickname).then((res) => {
+                console.log(res);
                 res.forEach(element => {
-                    player.renderPlayer(element);
+
+                    _renderPlayer(element);
                 });
             });
         }, (x) => {
-            player.renderPlayer(x.nickname);
+            _renderPlayer(x.nickname);
         }, [playerBody]);
     };
 
@@ -123,11 +153,11 @@ let player = (function (api) {
             let key = event.keyCode || event.charCode;
             if(key == 8 || key == 46){
                 event.preventDefault();
-                _sendLetter(true);
+                _sendDeletion();
             }
         });
         _wordInput.on("input", (event) => {
-            _sendLetter(false);
+            _sendLetter();
         });
     };
 
@@ -167,6 +197,19 @@ let player = (function (api) {
     _publicFunctions.roundWonLost = function (imTheWinner) {  
         _announceWinner(imTheWinner);
     };
+
+    _publicFunctions.deleteLetter = function (input) {  
+        _renderDelete(input.letterPos, input.nickname);
+    };
+
+    _publicFunctions.endGame = function (winner) {  
+        _endGame(winner);
+    };
+
+    _publicFunctions.backToLobby = () => {
+        $("#set-nickname").click();
+        $("#end-game-screen").addClass("not-in-screen");
+    }
 
     _publicFunctions.runIfItsMe = function (nickname, itsMe, itsNotMe=()=>{}, extraParams=[]) {  
         if(nickname === _nickname) {

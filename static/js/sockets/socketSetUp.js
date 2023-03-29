@@ -9,15 +9,12 @@ let socketSetUp = (function () {
 
     let _requestWords = (winner) => {
         $("#word-input").val("");
+        $("#start-game").addClass("not-in-screen");
         player.endRound();
         playerclient.getPlayers().then((res) => {
             res.forEach(e => player.renderWord(e.nickname, winner));
         });
         player.roundWonLost(player.getNickname() === winner);
-    };
-
-    let _checkLetter = (event) => {
-        player.renderLetter(event);
     };
 
     let socket = new SockJS(`${_server}/stompendpoint`);
@@ -38,7 +35,18 @@ let socketSetUp = (function () {
 
         stompClient.subscribe("/topic/sendLetter", eventbody => {
             let event = JSON.parse(eventbody.body);
-            _checkLetter(event);
+            player.renderLetter(event);
         });
+
+        stompClient.subscribe("/topic/deleteLetter", eventbody => {
+            let event = JSON.parse(eventbody.body);
+            player.deleteLetter(event)
+        });
+
+        stompClient.subscribe("/topic/endGame", eventbody => {
+            let event = JSON.parse(eventbody.body);
+            player.endGame(event);
+        });
+
     });
 })();

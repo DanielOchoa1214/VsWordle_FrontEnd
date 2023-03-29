@@ -22,7 +22,7 @@ let register = (function (api) {
             _joinGame();
             player.init();
         });
-        // Luego mover la musica al menu principal
+        // Luego mover lo siguiente al menu principal
         let playAttempt = setInterval(() => {
                 $("#background-music")[0].play().then(() => {
                     clearInterval(playAttempt);
@@ -31,7 +31,12 @@ let register = (function (api) {
                     console.log("Esperando a que el usuario interactue con la pagina para iniciar la musica...");
                 });
             }, 3000);
+        // $("#background-music")[0].volume = 0.025;
         $("#background-music")[0].volume = 0;
+        $("#back-to-menu").on("click", () => {
+            $("#register-screen").removeClass("not-in-screen");
+            $("#end-game-screen").addClass("not-in-screen");
+        });
     };
 
     return _publicFunctions;

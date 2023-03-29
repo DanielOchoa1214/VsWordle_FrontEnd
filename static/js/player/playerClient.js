@@ -33,7 +33,13 @@ let playerclient = (function (){
             data: {
                 host: host,
             },
-            contentType: "application/json"
+            contentType: "application/json",
+            success: (data) => {
+                console.log(data);
+            },
+            error: (err) => {
+                console.log(err);
+            }
         });
     };
 
