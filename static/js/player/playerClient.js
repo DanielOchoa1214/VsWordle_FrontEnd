@@ -34,12 +34,6 @@ let playerclient = (function (){
                 host: host,
             },
             contentType: "application/json",
-            success: (data) => {
-                console.log(data);
-            },
-            error: (err) => {
-                console.log(err);
-            }
         });
     };
 
@@ -47,6 +41,14 @@ let playerclient = (function (){
         return $.ajax({
             url: `${_server}/lobbies/players`,
             type: 'GET',
+        });
+    };
+
+    
+    _publicFunctions.startGame = function () {
+        return $.ajax({
+            url: `${_server}/lobbies/startGame`,
+            type: 'PUT',
         });
     };
 

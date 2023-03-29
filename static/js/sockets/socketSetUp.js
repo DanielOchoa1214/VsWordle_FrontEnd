@@ -45,7 +45,7 @@ let socketSetUp = (function () {
 
         stompClient.subscribe("/topic/endGame", eventbody => {
             let event = JSON.parse(eventbody.body);
-            player.endGame(event);
+            ending.endGame(event);
         });
 
     });

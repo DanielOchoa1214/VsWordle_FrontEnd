@@ -21,6 +21,7 @@
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
     <link rel="stylesheet" href="./static/css/register.css">
     <link rel="stylesheet" href="./static/css/player.css">
+    <link rel="stylesheet" href="./static/css/ending.css">
     <title>VsWordle</title>
 </head>
 
@@ -37,6 +38,7 @@
             <h2>Ingresa tu Nickname: </h2>
             <input id="nickname" type="text" class="nes-input">
             <button id="set-nickname" class="nes-btn is-success">JOIN</button>
+            <small id="error-text" class="nes-text is-error"></small>
         </div>
     </div>
     <div id="game-screen" class="container not-in-screen">
@@ -114,7 +116,7 @@
         </div>
         <button id="start-game" onclick="player.startGame()" class="nes-btn is-success start-btn">Start</button>
     </div>
-    <div id="end-game-screen" class="not-in-screen">
+    <div id="end-game-screen" class="nes-container not-in-screen">
         <h2>GANADOR</h2>
         <h4 id="winner"></h4>
         <button id="play-again" class="nes-btn is-warning" onclick="player.backToLobby()">Volver a jugar</button>
@@ -123,6 +125,7 @@
     <script src="./static/js/enviroment.js"></script>
     <script src="./static/js/player/playerClient.js"></script>
     <script src="./static/js/player/player.js"></script>
+    <script src="./static/js/ending/ending.js"></script>
     <script src="./static/js/sockets/socketSetUp.js"></script>
     <script src="./static/js/register/registerClient.js"></script>
     <script src="./static/js/register/register.js"></script>

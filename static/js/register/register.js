@@ -39,5 +39,9 @@ let register = (function (api) {
         });
     };
 
+    _publicFunctions.startGame = function () {
+        api.startGame();
+    };
+
     return _publicFunctions;
 })(registerClient);

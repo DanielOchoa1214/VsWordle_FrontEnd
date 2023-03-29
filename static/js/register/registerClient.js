@@ -3,6 +3,14 @@ let registerClient = (function () {
     let _publicFunctions = {};
     let _server = enviroment.local;
 
+    let _showError = (err) => {
+        $("#error-text").text(err.responseText)
+    }
+
+    let _removeError = () => {
+        $("#error-text").text("")
+    };
+
     _publicFunctions.joinGame = function (nickname) {
         return $.ajax({
             url: `${_server}/lobbies`,
@@ -10,7 +18,9 @@ let registerClient = (function () {
             data: JSON.stringify({
                 nickname: nickname,
             }),
-            contentType: "application/json"
+            contentType: "application/json",
+            success: res => _removeError(res),
+            error: err => _showError(err),
         });
     };
 

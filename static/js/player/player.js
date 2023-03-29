@@ -10,7 +10,6 @@ let player = (function (api) {
     // Funciones privadas
     let _announceWinner = (imTheWinner) => {
         if(_round !== 0){
-            console.log(imTheWinner);
             if(imTheWinner) {
                 $("#correct-word")[0].play();
                 $("#correct-word")[0].volume = 0.05;
@@ -86,22 +85,6 @@ let player = (function (api) {
         if(_round === 9 && _currentWord.length === letterPos + 1) {
             stompClient.send("/app/endGame", {}, {});
         }
-    };
-
-    let _endGame = (winner) => {
-        console.log("GANESTEEE: " + JSON.stringify(winner));
-        $("#winner").text(winner.nickname);
-        $("#end-game-screen").removeClass("not-in-screen");
-        $("#game-screen").addClass("not-in-screen");
-        $(".word").text("ESPERANDO");
-        $("#start-game").removeClass("not-in-screen");
-        _wordInput.addClass("not-in-screen");
-        _wordInput.val("");
-        $("#joystick").addClass("not-in-screen");
-        $(".side-player-panel .player").addClass("available");
-        _round = -1;
-        _wordInput.off("keydown");
-        _wordInput.off("input");
     };
 
     let _renderLetter = (event) => {
@@ -187,8 +170,14 @@ let player = (function (api) {
     };
 
     _publicFunctions.startGame = function () {
+        api.startGame();
         stompClient.send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
     };
+
+    _publicFunctions.endGame = function () {
+        _round = -1;
+        _mistakes = [];
+    }
 
     _publicFunctions.join = function (playerBody) {  
         _join(playerBody);
@@ -200,10 +189,6 @@ let player = (function (api) {
 
     _publicFunctions.deleteLetter = function (input) {  
         _renderDelete(input.letterPos, input.nickname);
-    };
-
-    _publicFunctions.endGame = function (winner) {  
-        _endGame(winner);
     };
 
     _publicFunctions.backToLobby = () => {

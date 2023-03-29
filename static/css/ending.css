@@ -1,0 +1,7 @@
+#end-game-screen {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
