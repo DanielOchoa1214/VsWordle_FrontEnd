@@ -11,11 +11,11 @@ let player = (function (api) {
     let _announceWinner = (imTheWinner) => {
         if(_round !== 0){
             if(imTheWinner) {
-                $("#correct-word")[0].play();
                 $("#correct-word")[0].volume = 0.05;
+                $("#correct-word")[0].play();
             } else  {
-                $("#incorrect-word")[0].play();
                 $("#incorrect-word")[0].volume = 0.05;
+                $("#incorrect-word")[0].play();
             }
         }
     };
@@ -55,7 +55,7 @@ let player = (function (api) {
             let word = _wordInput.val();
             api.checkWord(word, _round, _nickname).then((res) => {
                 if(res){
-                    stompClient.send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
+                    socketSetUp.getStompClient().send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
                 }
             });
         }
@@ -67,7 +67,7 @@ let player = (function (api) {
             nickname: _nickname,
             letterPos: letterPos,
         }
-        stompClient.send("/topic/deleteLetter", {}, JSON.stringify(data));
+        socketSetUp.getStompClient().send("/topic/deleteLetter", {}, JSON.stringify(data));
     }
 
     let _sendLetter = () => {
@@ -78,12 +78,12 @@ let player = (function (api) {
             letterPos: letterPos,
             correct: _checkLetter(letterPos, letter),
         }
-        stompClient.send("/topic/sendLetter", {}, JSON.stringify(data));
+        socketSetUp.getStompClient().send("/topic/sendLetter", {}, JSON.stringify(data));
     };
 
     let _tryEndGame = (letterPos) => {
         if(_round === 9 && _currentWord.length === letterPos + 1) {
-            stompClient.send("/app/endGame", {}, {});
+            socketSetUp.getStompClient().send("/app/endGame", {}, {});
         }
     };
 
@@ -113,15 +113,11 @@ let player = (function (api) {
     };
 
     let _join = (playerBody) => {
-        console.log(JSON.stringify(playerBody));
-        console.log(_nickname);
         _publicFunctions.runIfItsMe(playerBody.nickname, () => {
             $(".player-1").first().attr("id", _nickname);
             $("#main-player-nick").text(_nickname);
             playerclient.missingPlayers(_nickname).then((res) => {
-                console.log(res);
                 res.forEach(element => {
-
                     _renderPlayer(element);
                 });
             });
@@ -170,8 +166,8 @@ let player = (function (api) {
     };
 
     _publicFunctions.startGame = function () {
-        api.startGame();
-        stompClient.send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
+        socketSetUp.getStompClient().send("/app/startGame", {}, JSON.stringify({}));
+        socketSetUp.getStompClient().send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
     };
 
     _publicFunctions.endGame = function () {
@@ -192,6 +188,7 @@ let player = (function (api) {
     };
 
     _publicFunctions.backToLobby = () => {
+        socketSetUp.connect();
         $("#set-nickname").click();
         $("#end-game-screen").addClass("not-in-screen");
     }

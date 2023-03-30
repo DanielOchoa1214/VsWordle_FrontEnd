@@ -13,16 +13,17 @@
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
-    <script src="./resources/sockjs.min.js"></script>
-    <script src="./resources/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="./resources/sockjs.min.js"></script> -->
+    <!-- <script src="./resources/stomp.min.js"></script> -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
     <link rel="stylesheet" href="./static/css/register.css">
     <link rel="stylesheet" href="./static/css/player.css">
     <link rel="stylesheet" href="./static/css/ending.css">
     <title>VsWordle</title>
+    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.png">
 </head>
 
 <body onload="register.init()">
@@ -58,7 +59,7 @@
                         <div class="input-group mt-6">
                             <i id="joystick" class="bi bi-joystick input-icon nes-input not-in-screen"></i>
                             <input id="word-input" type="text" class="nes-input form-control not-in-screen"
-                                placeholder="Escribe la palabra !!!" aria-describedby="basic-addon1">
+                                placeholder="Escribe la palabra !!!" aria-describedby="basic-addon1" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -123,10 +124,10 @@
         <button id="back-to-menu" class="nes-btn is-warning">Volver al menu</button>
     </div>
     <script src="./static/js/enviroment.js"></script>
+    <script src="./static/js/sockets/socketSetUp.js"></script>
     <script src="./static/js/player/playerClient.js"></script>
     <script src="./static/js/player/player.js"></script>
     <script src="./static/js/ending/ending.js"></script>
-    <script src="./static/js/sockets/socketSetUp.js"></script>
     <script src="./static/js/register/registerClient.js"></script>
     <script src="./static/js/register/register.js"></script>
 </body>

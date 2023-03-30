@@ -8,16 +8,16 @@ let register = (function (api) {
         _nickname = player.getNickname();
         api.joinGame(_nickname).then((res)=>{
             if(res) {
-                stompClient.send(`/topic/joinGame`, {}, JSON.stringify({nickname: _nickname}));
-                $("#game-screen").removeClass("not-in-screen");
-                $("#register-screen").addClass("not-in-screen");
-            } else {
-                alert("Fuera!!!! Eres el que sobra :(")
+                socketSetUp.connect(() => {
+                    socketSetUp.getStompClient().send(`/topic/joinGame`, {}, JSON.stringify({nickname: _nickname}));
+                    $("#game-screen").removeClass("not-in-screen");
+                    $("#register-screen").addClass("not-in-screen");
+                });
             }
         });
     };
 
-    _publicFunctions.init = function () {  
+    _publicFunctions.init = function () { 
         $("#set-nickname").click(() => {
             _joinGame();
             player.init();

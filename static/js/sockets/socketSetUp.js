@@ -1,6 +1,9 @@
 let socketSetUp = (function () {  
 
     let _server = enviroment.local;
+    let _stompClient = null;
+
+    let _publicFunctions = {};
 
     let _joinGame = (eventbody) => {
         let playerBody = JSON.parse(eventbody.body);
@@ -17,36 +20,55 @@ let socketSetUp = (function () {
         player.roundWonLost(player.getNickname() === winner);
     };
 
-    let socket = new SockJS(`${_server}/stompendpoint`);
-    stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe(`/topic/joinGame`, eventbody => {
-            _joinGame(eventbody);
+    let _connect = (clb) => {
+        let _socket = new SockJS(`${_server}/stompendpoint`);
+        _stompClient = Stomp.over(_socket);
+        _stompClient.connect({}, function (frame) {
+            _stompClient.subscribe(`/topic/joinGame`, eventbody => {
+                _joinGame(eventbody);
+            });
+            _stompClient.subscribe("/topic/requestNext", eventbody => {
+                let winner = JSON.parse(eventbody.body).nickname;
+                _requestWords(winner);
+                $("#joystick").removeClass("not-in-screen");
+                $("#word-input").removeClass("not-in-screen");
+                $("#word-input").focus();
+            });
+    
+            _stompClient.subscribe("/topic/sendLetter", eventbody => {
+                let event = JSON.parse(eventbody.body);
+                player.renderLetter(event);
+            });
+    
+            _stompClient.subscribe("/topic/deleteLetter", eventbody => {
+                let event = JSON.parse(eventbody.body);
+                player.deleteLetter(event)
+            });
+    
+            _stompClient.subscribe("/topic/endGame", eventbody => {
+                let event = JSON.parse(eventbody.body);
+                ending.endGame(event);
+            });
+            clb();
         });
+    };
 
-        stompClient.subscribe("/topic/requestNext", eventbody => {
-            let winner = JSON.parse(eventbody.body).nickname;
-            _requestWords(winner);
-            $("#joystick").removeClass("not-in-screen");
-            $("#word-input").removeClass("not-in-screen");
-            $("#word-input").focus();
-        });
+    let _disconnect = () => {
+        _stompClient.disconnect();
+    };
 
-        stompClient.subscribe("/topic/sendLetter", eventbody => {
-            let event = JSON.parse(eventbody.body);
-            player.renderLetter(event);
-        });
+    _publicFunctions.connect = function (clb) {  
+        _connect(clb);
+    };
 
-        stompClient.subscribe("/topic/deleteLetter", eventbody => {
-            let event = JSON.parse(eventbody.body);
-            player.deleteLetter(event)
-        });
+    _publicFunctions.disconnect = function () {  
+        _disconnect();
+    };
 
-        stompClient.subscribe("/topic/endGame", eventbody => {
-            let event = JSON.parse(eventbody.body);
-            ending.endGame(event);
-        });
+    _publicFunctions.getStompClient = function () {  
+        return _stompClient;
+    };
 
-    });
+
+    return _publicFunctions;
 })();
