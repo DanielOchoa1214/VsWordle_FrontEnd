@@ -3,6 +3,8 @@ let enviroment = {
     // Apartamento
     // local: "http://192.168.20.30:8080"
     // Casita
-    // local: "http://192.168.0.11:8080" 
+    // local: "http://192.168.10.2:8080" 
+    // Universidad
+    // local: "http://10.16.9.113:8080"
     // Se crea el resto cuando tengamos dominio
 }

@@ -188,9 +188,7 @@ let player = (function (api) {
     };
 
     _publicFunctions.backToLobby = () => {
-        socketSetUp.connect();
         $("#set-nickname").click();
-        $("#end-game-screen").addClass("not-in-screen");
     }
 
     _publicFunctions.runIfItsMe = function (nickname, itsMe, itsNotMe=()=>{}, extraParams=[]) {  

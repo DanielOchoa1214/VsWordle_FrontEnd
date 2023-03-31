@@ -39,7 +39,7 @@
             <h2>Ingresa tu Nickname: </h2>
             <input id="nickname" type="text" class="nes-input">
             <button id="set-nickname" class="nes-btn is-success">JOIN</button>
-            <small id="error-text" class="nes-text is-error"></small>
+            <small class="nes-text is-error error-text"></small>
         </div>
     </div>
     <div id="game-screen" class="container not-in-screen">
@@ -122,6 +122,7 @@
         <h4 id="winner"></h4>
         <button id="play-again" class="nes-btn is-warning" onclick="player.backToLobby()">Volver a jugar</button>
         <button id="back-to-menu" class="nes-btn is-warning">Volver al menu</button>
+        <small class="nes-text is-error error-text"></small>
     </div>
     <script src="./static/js/enviroment.js"></script>
     <script src="./static/js/sockets/socketSetUp.js"></script>

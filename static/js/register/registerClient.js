@@ -4,11 +4,13 @@ let registerClient = (function () {
     let _server = enviroment.local;
 
     let _showError = (err) => {
-        $("#error-text").text(err.responseText)
+        $(".error-text").text(err.responseText);
     }
 
-    let _removeError = () => {
-        $("#error-text").text("")
+    let _success = () => {
+        socketSetUp.connect();
+        $(".error-text").text("");
+        $("#end-game-screen").addClass("not-in-screen");
     };
 
     _publicFunctions.joinGame = function (nickname) {
@@ -19,7 +21,7 @@ let registerClient = (function () {
                 nickname: nickname,
             }),
             contentType: "application/json",
-            success: res => _removeError(res),
+            success: res => _success(res),
             error: err => _showError(err),
         });
     };

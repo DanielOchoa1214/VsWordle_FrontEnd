@@ -36,6 +36,7 @@ let register = (function (api) {
         $("#back-to-menu").on("click", () => {
             $("#register-screen").removeClass("not-in-screen");
             $("#end-game-screen").addClass("not-in-screen");
+            $(".error-text").text("");
         });
     };
 
