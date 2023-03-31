@@ -112,6 +112,13 @@ let player = (function (api) {
         $(`#${element}`).removeClass("available");
     };
 
+    let _playerLeft = (player) => {
+        $(`#${player.nickname}`).addClass("available");
+        $(`#${player.nickname} h3`).text("");
+        $(`#${player.nickname} .word`).text("ESPERANDO");
+        $(`#${player.nickname}`).attr("id", "");
+    };
+
     let _join = (playerBody) => {
         _publicFunctions.runIfItsMe(playerBody.nickname, () => {
             $(".player-1").first().attr("id", _nickname);
@@ -189,7 +196,11 @@ let player = (function (api) {
 
     _publicFunctions.backToLobby = () => {
         $("#set-nickname").click();
-    }
+    };
+
+    _publicFunctions.playerLeft = (player) => {
+        _playerLeft(player)
+    };
 
     _publicFunctions.runIfItsMe = function (nickname, itsMe, itsNotMe=()=>{}, extraParams=[]) {  
         if(nickname === _nickname) {

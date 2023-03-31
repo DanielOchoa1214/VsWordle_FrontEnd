@@ -49,6 +49,13 @@ let socketSetUp = (function () {
                 let event = JSON.parse(eventbody.body);
                 ending.endGame(event);
             });
+
+            _stompClient.subscribe("/topic/removePlayer", eventbody => {
+                let event = JSON.parse(eventbody.body);
+                player.playerLeft(event);
+            });
+
+            // Cosas que correr cuando termine la conexion
             clb();
         });
     };

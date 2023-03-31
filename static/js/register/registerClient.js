@@ -8,7 +8,6 @@ let registerClient = (function () {
     }
 
     let _success = () => {
-        socketSetUp.connect();
         $(".error-text").text("");
         $("#end-game-screen").addClass("not-in-screen");
     };
@@ -23,6 +22,17 @@ let registerClient = (function () {
             contentType: "application/json",
             success: res => _success(res),
             error: err => _showError(err),
+        });
+    };
+
+    _publicFunctions.removePlayer = function (nickname) {  
+        return $.ajax({
+            url: `${_server}/lobbies`,
+            type: 'DELETE',
+            data: {
+                nickname: nickname,
+            },
+            contentType: "application/json",
         });
     };
 

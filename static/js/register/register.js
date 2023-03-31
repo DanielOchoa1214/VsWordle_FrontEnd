@@ -38,6 +38,10 @@ let register = (function (api) {
             $("#end-game-screen").addClass("not-in-screen");
             $(".error-text").text("");
         });
+        window.onbeforeunload = function () {  
+            let playerNickname = player.getNickname();
+            socketSetUp.getStompClient().send("/app/removePlayer", {}, JSON.stringify({nickname: playerNickname}))
+        };
     };
 
     _publicFunctions.startGame = function () {
