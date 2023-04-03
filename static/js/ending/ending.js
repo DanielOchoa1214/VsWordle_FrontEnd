@@ -11,9 +11,10 @@ let ending = (function () {
 
     let _resetMainPlayerView = () => {
         $(".word").text("ESPERANDO");
-        $("#start-game").removeClass("not-in-screen");
+        $("#start-game").addClass("not-in-screen");
         $("#game-screen").addClass("not-in-screen");
         $(".side-player-panel .player").addClass("available");
+        player.setAdmin(false);
     };
 
     let _showWinner = (winner) => {
@@ -37,6 +38,7 @@ let ending = (function () {
         _resetMainPlayerView();
         _showWinner(winner);
         _playEndingSound(winner);
+        $("#join-lobby-section").addClass("not-in-screen");
         socketSetUp.disconnect();
     };
 

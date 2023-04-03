@@ -6,6 +6,9 @@ let player = (function (api) {
     let _nickname = "DANO";
     let _mistakes = [];
     let _currentWord = "";
+    let _lobbyId = "";
+    let _isAdmin = false;
+    let _inProcess = false;
 
     // Funciones privadas
     let _announceWinner = (imTheWinner) => {
@@ -20,8 +23,8 @@ let player = (function (api) {
         }
     };
 
-    let _renderWord = (player, winner) => {
-        api.getWord(_round).then((res) => {
+    let _renderWord = (player) => {
+        api.getWord(_round, _lobbyId).then((res) => {
             _currentWord = res; 
             let markup = "";
             let letterPos = 0;
@@ -37,7 +40,7 @@ let player = (function (api) {
     let _correctLetter = (letterPos, nickname) => {
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).addClass("correct-letter");
-        _publicFunctions.runIfItsMe(nickname, () => _mistakes = _mistakes.filter(x => x !== letterPos));
+        _publicFunctions.runIfItsMe(nickname, () => _mistakes.pop());
     };
 
     let _incorrectLetter = (letterPos, nickname) => {
@@ -47,27 +50,26 @@ let player = (function (api) {
     };
 
     let _checkLetter = (letterPos, letter) => {
-        return [..._currentWord][letterPos] === letter && _mistakes.length === 0;
+        return _currentWord[letterPos] === letter && _mistakes.length === 0;
     };
 
-    let _tryGetNextWord = (letterPos) => {
-        if(_currentWord.length === letterPos + 1 && _round !== 9) {
+    let _tryGetNextWord = (letterPos, correct) => {
+        if(_currentWord.length === letterPos + 1 && _round !== 9 && correct) {
             let word = _wordInput.val();
-            api.checkWord(word, _round, _nickname).then((res) => {
+            api.checkWord(word, _round, _nickname, _lobbyId).then((res) => {
                 if(res){
-                    socketSetUp.getStompClient().send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
+                    socketSetUp.getStompClient().send(`/topic/requestNext.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname}));
                 }
             });
         }
     };
 
-    let _sendDeletion = () => {
-        let letterPos = _wordInput.val().length - 1;
+    let _sendDeletion = (letterPos) => {
         let data = {
             nickname: _nickname,
             letterPos: letterPos,
         }
-        socketSetUp.getStompClient().send("/topic/deleteLetter", {}, JSON.stringify(data));
+        socketSetUp.getStompClient().send(`/topic/deleteLetter.${_lobbyId}`, {}, JSON.stringify(data));
     }
 
     let _sendLetter = () => {
@@ -78,20 +80,20 @@ let player = (function (api) {
             letterPos: letterPos,
             correct: _checkLetter(letterPos, letter),
         }
-        socketSetUp.getStompClient().send("/topic/sendLetter", {}, JSON.stringify(data));
+        _tryGetNextWord(letterPos, data.correct);
+        _tryEndGame(letterPos, data.correct);
+        socketSetUp.getStompClient().send(`/topic/sendLetter.${_lobbyId}`, {}, JSON.stringify(data));
     };
 
-    let _tryEndGame = (letterPos) => {
-        if(_round === 9 && _currentWord.length === letterPos + 1) {
-            socketSetUp.getStompClient().send("/app/endGame", {}, {});
+    let _tryEndGame = (letterPos, correct) => {
+        if(_round === 9 && _currentWord.length === letterPos + 1 && correct) {
+            socketSetUp.getStompClient().send(`/app/endGame.${_lobbyId}`, {}, {});
         }
     };
 
     let _renderLetter = (event) => {
         if(event.correct){
             _correctLetter(event.letterPos, event.nickname);
-            _tryGetNextWord(event.letterPos);
-            _tryEndGame(event.letterPos);
         } else  {
             _incorrectLetter(event.letterPos, event.nickname);
         }
@@ -100,10 +102,11 @@ let player = (function (api) {
     let _renderDelete = (letterPos, nickname) => {
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
-        _publicFunctions.runIfItsMe(nickname, () => {
-            _mistakes = _mistakes.filter(x => x !== letterPos);
-            _wordInput.val(_wordInput.val().slice(0, -1));
-        });
+        if(nickname == _nickname){
+            _mistakes.pop();
+        }
+        // _publicFunctions.runIfItsMe(nickname, () => {
+        // });
     };
 
     let _renderPlayer = (element) => {
@@ -119,15 +122,29 @@ let player = (function (api) {
         $(`#${player.nickname}`).attr("id", "");
     };
 
+    let _checkHost = () => {
+        api.getHost(_lobbyId).then((res) => {
+            _publicFunctions.runIfItsMe(res.nickname, () => {
+                $("#start-game").removeClass("not-in-screen");
+            });
+        });
+    };
+
+    let _renderOtherPlayers = () => {
+        api.missingPlayers(_nickname, _lobbyId).then((res) => {
+            res.forEach(element => {
+                _renderPlayer(element);
+            });
+        });
+    };
+
     let _join = (playerBody) => {
+        $("#display-lobby-id").text(`#${_lobbyId}`);
         _publicFunctions.runIfItsMe(playerBody.nickname, () => {
             $(".player-1").first().attr("id", _nickname);
             $("#main-player-nick").text(_nickname);
-            playerclient.missingPlayers(_nickname).then((res) => {
-                res.forEach(element => {
-                    _renderPlayer(element);
-                });
-            });
+            _checkHost();
+            _renderOtherPlayers()
         }, (x) => {
             _renderPlayer(x.nickname);
         }, [playerBody]);
@@ -135,14 +152,20 @@ let player = (function (api) {
 
     // Funciones publicas
     _publicFunctions.init = function () {
-        _wordInput.on("keydown", (event) => {
+        _wordInput
+        .off("keydown")
+        .on("keydown", (event) => {
             let key = event.keyCode || event.charCode;
             if(key == 8 || key == 46){
                 event.preventDefault();
-                _sendDeletion();
+                let letterPos = _wordInput.val().length - 1;
+                _wordInput.val(_wordInput.val().slice(0, -1));
+                _sendDeletion(letterPos);
             }
         });
-        _wordInput.on("input", (event) => {
+        _wordInput
+        .off("input")
+        .on("input", () => {
             _sendLetter();
         });
     };
@@ -164,7 +187,7 @@ let player = (function (api) {
     };
 
     _publicFunctions.renderWord = function (player, winner) {  
-        _renderWord(player, winner)
+        _renderWord(player)
     };
 
     _publicFunctions.endRound = function () {  
@@ -173,8 +196,8 @@ let player = (function (api) {
     };
 
     _publicFunctions.startGame = function () {
-        socketSetUp.getStompClient().send("/app/startGame", {}, JSON.stringify({}));
-        socketSetUp.getStompClient().send("/topic/requestNext", {}, JSON.stringify({nickname: _nickname}));
+        socketSetUp.getStompClient().send(`/app/startGame.${_lobbyId}`, {}, JSON.stringify({}));
+        socketSetUp.getStompClient().send(`/topic/requestNext.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname}));
     };
 
     _publicFunctions.endGame = function () {
@@ -195,7 +218,7 @@ let player = (function (api) {
     };
 
     _publicFunctions.backToLobby = () => {
-        $("#set-nickname").click();
+        register.joinGame(_nickname, _lobbyId);
     };
 
     _publicFunctions.playerLeft = (player) => {
@@ -208,6 +231,18 @@ let player = (function (api) {
         } else {
             itsNotMe(...extraParams);
         }
+    };
+
+    _publicFunctions.getLobbyId = function () {  
+        return _lobbyId;
+    };
+
+    _publicFunctions.setLobbyId = function (newLobbyId) {  
+        _lobbyId = newLobbyId;
+    };
+
+    _publicFunctions.setAdmin = function (isAdmin) {  
+        _isAdmin = isAdmin;
     };
 
     return _publicFunctions;

@@ -10,47 +10,48 @@ let socketSetUp = (function () {
         player.join(playerBody);
     };
 
-    let _requestWords = (winner) => {
+    let _requestWords = (winner, lobbyId) => {
         $("#word-input").val("");
         $("#start-game").addClass("not-in-screen");
         player.endRound();
-        playerclient.getPlayers().then((res) => {
-            res.forEach(e => player.renderWord(e.nickname, winner));
+        playerclient.getPlayers(lobbyId).then((res) => {
+            res.forEach(e => player.renderWord(e.nickname));
         });
         player.roundWonLost(player.getNickname() === winner);
     };
 
-    let _connect = (clb) => {
+    let _connect = (clb, lobbyId) => {
         let _socket = new SockJS(`${_server}/stompendpoint`);
         _stompClient = Stomp.over(_socket);
         _stompClient.connect({}, function (frame) {
-            _stompClient.subscribe(`/topic/joinGame`, eventbody => {
+            _stompClient.subscribe(`/topic/joinGame.${lobbyId}`, eventbody => {
                 _joinGame(eventbody);
             });
-            _stompClient.subscribe("/topic/requestNext", eventbody => {
+            _stompClient.subscribe(`/topic/requestNext.${lobbyId}`, eventbody => {
                 let winner = JSON.parse(eventbody.body).nickname;
-                _requestWords(winner);
+                _requestWords(winner, lobbyId);
                 $("#joystick").removeClass("not-in-screen");
                 $("#word-input").removeClass("not-in-screen");
                 $("#word-input").focus();
             });
     
-            _stompClient.subscribe("/topic/sendLetter", eventbody => {
+            _stompClient.subscribe(`/topic/sendLetter.${lobbyId}`, eventbody => {
                 let event = JSON.parse(eventbody.body);
                 player.renderLetter(event);
             });
     
-            _stompClient.subscribe("/topic/deleteLetter", eventbody => {
+            _stompClient.subscribe(`/topic/deleteLetter.${lobbyId}`, eventbody => {
                 let event = JSON.parse(eventbody.body);
-                player.deleteLetter(event)
+                player.deleteLetter(event);
             });
     
-            _stompClient.subscribe("/topic/endGame", eventbody => {
+            _stompClient.subscribe(`/topic/endGame.${lobbyId}`, eventbody => {
                 let event = JSON.parse(eventbody.body);
+                console.log("HOLI");
                 ending.endGame(event);
             });
 
-            _stompClient.subscribe("/topic/removePlayer", eventbody => {
+            _stompClient.subscribe(`/topic/removePlayer.${lobbyId}`, eventbody => {
                 let event = JSON.parse(eventbody.body);
                 player.playerLeft(event);
             });
@@ -64,8 +65,8 @@ let socketSetUp = (function () {
         _stompClient.disconnect();
     };
 
-    _publicFunctions.connect = function (clb) {  
-        _connect(clb);
+    _publicFunctions.connect = function (clb, lobbyId) {  
+        _connect(clb, lobbyId);
     };
 
     _publicFunctions.disconnect = function () {  

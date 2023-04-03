@@ -13,9 +13,9 @@
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- <script src="./resources/sockjs.min.js"></script> -->
+    <script src="./resources/sockjs.min.js"></script>
     <!-- <script src="./resources/stomp.min.js"></script> -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
@@ -34,13 +34,16 @@
         <audio id="game-over" src="./resources/music/game-over.mp3"></audio>
         <audio id="happy-wheels" src="./resources/music/happy-wheels.mp3"></audio>
     </div>
-    <div id="register-screen">
-        <div class="nes-container">
-            <h2>Ingresa tu Nickname: </h2>
-            <input id="nickname" type="text" class="nes-input">
-            <button id="set-nickname" class="nes-btn is-success">JOIN</button>
-            <small class="nes-text is-error error-text"></small>
+    <div id="register-screen" class="interface-screen nes-container">
+        <h2>Ingresa tu Nickname: </h2>
+        <input id="nickname" type="text" class="nes-input">
+        <div id="join-lobby-section" class="interface-screen not-in-screen">
+            <h3>Ingresa el ID del lobby</h3>
+            <input id="lobby-id" type="text" class="nes-input">
         </div>
+        <button id="set-nickname" class="nes-btn is-success" onclick="register.joinGame($('#nickname').val(), $('#lobby-id').val())">UNIRSE</button>
+        <button id="create-lobby" class="nes-btn is-success">CREAR PARTIDA</button>
+        <small class="nes-text is-error error-text"></small>
     </div>
     <div id="game-screen" class="container not-in-screen">
         <div class="row">
@@ -115,9 +118,12 @@
                 </div>
             </div>
         </div>
-        <button id="start-game" onclick="player.startGame()" class="nes-btn is-success start-btn">Start</button>
+        <div>
+            <p id="display-lobby-id"></p>
+            <button id="start-game" onclick="player.startGame()" class="nes-btn is-success start-btn not-in-screen">Start</button>
+        </div>
     </div>
-    <div id="end-game-screen" class="nes-container not-in-screen">
+    <div id="end-game-screen" class="nes-container interface-screen not-in-screen">
         <h2>GANADOR</h2>
         <h4 id="winner"></h4>
         <button id="play-again" class="nes-btn is-warning" onclick="player.backToLobby()">Volver a jugar</button>
