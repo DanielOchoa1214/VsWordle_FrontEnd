@@ -37,11 +37,6 @@
     margin-block: 5px;
     margin-inline: .1rem;
 }
-.start-btn{
-    margin-inline: auto;
-    display: block;
-    margin-top: 1rem;
-}
 .correct-letter {
     background-color: rgb(132 204 22);
 }
@@ -99,6 +94,19 @@ h3{
 .icon-box{
     display: flex;
     place-content: center;
+}
+
+#bottom-game-section {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-block: auto;
+}
+#display-lobby-id {
+    font-size: 2rem;
+    margin-block: auto;
 }
 @media (max-width:1000px) {
     .side-player-panel .word span{

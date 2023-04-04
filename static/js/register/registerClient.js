@@ -33,6 +33,8 @@ let registerClient = (function () {
                 nickname: nickname,
             }),
             contentType: "application/json",
+            success: res => _success(res),
+            error: err => _showError(err),
         });
     };
 

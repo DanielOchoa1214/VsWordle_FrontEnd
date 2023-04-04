@@ -7,8 +7,6 @@ let player = (function (api) {
     let _mistakes = [];
     let _currentWord = "";
     let _lobbyId = "";
-    let _isAdmin = false;
-    let _inProcess = false;
 
     // Funciones privadas
     let _announceWinner = (imTheWinner) => {
@@ -40,13 +38,11 @@ let player = (function (api) {
     let _correctLetter = (letterPos, nickname) => {
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).addClass("correct-letter");
-        _publicFunctions.runIfItsMe(nickname, () => _mistakes.pop());
     };
 
     let _incorrectLetter = (letterPos, nickname) => {
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).addClass("incorrect-letter");
-        _publicFunctions.runIfItsMe(nickname, () => {_mistakes.push(letterPos)});
     };
 
     let _checkLetter = (letterPos, letter) => {
@@ -54,11 +50,11 @@ let player = (function (api) {
     };
 
     let _tryGetNextWord = (letterPos, correct) => {
-        if(_currentWord.length === letterPos + 1 && _round !== 9 && correct) {
+        if(_currentWord.length === letterPos + 1 && correct) {
             let word = _wordInput.val();
             api.checkWord(word, _round, _nickname, _lobbyId).then((res) => {
-                if(res){
-                    socketSetUp.getStompClient().send(`/topic/requestNext.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname}));
+                if (res) {
+                    _round !== 9 ? socketSetUp.getStompClient().send(`/topic/requestNext.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname})) : _endGame();
                 }
             });
         }
@@ -69,6 +65,7 @@ let player = (function (api) {
             nickname: _nickname,
             letterPos: letterPos,
         }
+        _mistakes.pop();
         socketSetUp.getStompClient().send(`/topic/deleteLetter.${_lobbyId}`, {}, JSON.stringify(data));
     }
 
@@ -80,15 +77,22 @@ let player = (function (api) {
             letterPos: letterPos,
             correct: _checkLetter(letterPos, letter),
         }
-        _tryGetNextWord(letterPos, data.correct);
-        _tryEndGame(letterPos, data.correct);
+        data.correct ? _mistakes.pop() : _mistakes.push(letterPos);
         socketSetUp.getStompClient().send(`/topic/sendLetter.${_lobbyId}`, {}, JSON.stringify(data));
+        _tryGetNextWord(data.letterPos, data.correct);
+        _sendStatistics(data.correct);
     };
 
-    let _tryEndGame = (letterPos, correct) => {
-        if(_round === 9 && _currentWord.length === letterPos + 1 && correct) {
-            socketSetUp.getStompClient().send(`/app/endGame.${_lobbyId}`, {}, {});
+    let _sendStatistics = (correct) => {
+        if (correct) {
+            socketSetUp.getStompClient().send(`/app/correctLetter.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname}));
+        } else {
+            socketSetUp.getStompClient().send(`/app/wrongLetter.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname}));
         }
+    }
+
+    let _endGame = () => {
+        socketSetUp.getStompClient().send(`/app/endGame.${_lobbyId}`, {}, {});
     };
 
     let _renderLetter = (event) => {
@@ -102,11 +106,6 @@ let player = (function (api) {
     let _renderDelete = (letterPos, nickname) => {
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("correct-letter");
         $(`#${nickname} .word span[data-letter-pos='${letterPos}']`).removeClass("incorrect-letter");
-        if(nickname == _nickname){
-            _mistakes.pop();
-        }
-        // _publicFunctions.runIfItsMe(nickname, () => {
-        // });
     };
 
     let _renderPlayer = (element) => {
@@ -116,10 +115,13 @@ let player = (function (api) {
     };
 
     let _playerLeft = (player) => {
-        $(`#${player.nickname}`).addClass("available");
+        $(`.side-player-panel #${player.nickname}`).addClass("available");
         $(`#${player.nickname} h3`).text("");
         $(`#${player.nickname} .word`).text("ESPERANDO");
         $(`#${player.nickname}`).attr("id", "");
+        if(_round === -1){
+            _checkHost();
+        }
     };
 
     let _checkHost = () => {
@@ -152,20 +154,17 @@ let player = (function (api) {
 
     // Funciones publicas
     _publicFunctions.init = function () {
-        _wordInput
-        .off("keydown")
-        .on("keydown", (event) => {
+        _wordInput.off("keydown").on("keydown", (event) => {
             let key = event.keyCode || event.charCode;
             if(key == 8 || key == 46){
                 event.preventDefault();
+                // PROBAR MOVER EL LETTER POS CON EL PC DE CAMILO
                 let letterPos = _wordInput.val().length - 1;
                 _wordInput.val(_wordInput.val().slice(0, -1));
                 _sendDeletion(letterPos);
             }
         });
-        _wordInput
-        .off("input")
-        .on("input", () => {
+        _wordInput.off("input").on("input", () => {
             _sendLetter();
         });
     };
@@ -239,10 +238,6 @@ let player = (function (api) {
 
     _publicFunctions.setLobbyId = function (newLobbyId) {  
         _lobbyId = newLobbyId;
-    };
-
-    _publicFunctions.setAdmin = function (isAdmin) {  
-        _isAdmin = isAdmin;
     };
 
     return _publicFunctions;

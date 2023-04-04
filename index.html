@@ -13,39 +13,112 @@
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./resources/sockjs.min.js"></script>
+    <!-- <script src="./resources/sockjs.min.js"></script> -->
     <!-- <script src="./resources/stomp.min.js"></script> -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+    <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="./static/css/register.css">
     <link rel="stylesheet" href="./static/css/player.css">
     <link rel="stylesheet" href="./static/css/ending.css">
+    <link rel="stylesheet" href="./static/css/mainMenu.css">
     <title>VsWordle</title>
     <link rel="icon" type="image/x-icon" href="./resources/images/favicon.png">
 </head>
 
-<body onload="register.init()">
-    <div id="audios" class="">
+<body onload="mainMenu.init()">
+    <div id="audios">
         <audio id="background-music" src="./resources/music/background.mp3" loop="loop"></audio>
         <audio id="correct-word" src="./resources/music/ding.wav"></audio>
         <audio id="incorrect-word" src="./resources/music/bzzzt.wav"></audio>
         <audio id="game-over" src="./resources/music/game-over.mp3"></audio>
         <audio id="happy-wheels" src="./resources/music/happy-wheels.mp3"></audio>
     </div>
-    <div id="register-screen" class="interface-screen nes-container">
+    <div id="main-menu-screen" class="interface-screen nes-container">
+        <h1>VsWordle</h1>
+        <button id="play" class="nes-btn is-primary">Jugar</button>
+        <button class="nes-btn is-primary" onclick="$('#instructions')[0].showModal(); $('#instructions').scrollTop('0')">Instrucciones</button>
+        <button class="nes-btn is-primary" onclick="$('#credits')[0].showModal(); $('#credits').scrollTop('0')">Creditos</button>
+        <button id="config-btn" class="nes-btn">
+            <img src="./resources/images/ConfigBtn.png" alt="ConfigBtn" style="image-rendering: pixelated;">
+        </button>
+        <dialog id="instructions" class="nes-dialog is-rounded">
+            <form method="dialog">
+                <h2 class="title">Instrucciones</h2>
+                <br>
+                <div>
+                    <h4>Menu principal</h4>
+                    <img src="./resources/images/MenuPrincipal.png" alt="Imagen Menu Principal">
+                    <p>Esta es la primera pantalla que te encontraras, en ella tienes las siguientes opciones: </p>
+                    <ul class="nes-list is-disc">
+                        <li>Oprimir el boton jugar, con el cual te iras a la seccion de registro y empezar a jugar</li>
+                        <li>Oprimir el boton Instrucciones, el cual abrira este dialogo (Pero eso ya lo sabes xd, si no como llegaste aca :O)</li>
+                    </ul>
+                </div>
+                <br>
+                <div>
+                    <h4>Menu registro</h4>
+                    <img src="./resources/images/Registro.png" alt="Imagen Menu Registro">
+                    <p>En esta seccion podras ingresar en el campo el nombre con el que quieres que te reconozcan en las partidas, para ello dentro de esta seccion tienes las siguientes opciones: </p>
+                    <ul class="nes-list is-disc">
+                        <li>Oprimir el boton rojo para volver al menu principal</li>
+                        <li>Oprimir el boton "Unirse" para habilitar el campo de ingreso del ID del lobby, cuando hayas llenado tu Nick y hayas ingresado un Id valido, vulve a oprimir el boton y si todo sale bien pasaras a la sala de espera</li>
+                        <li>Oprimir el boton "Crear partida" para crear un nuevo lobby, para ello solo debes proporcionar un Nick y si todo sale bien pasaras a la sala de espera como un admin</li>
+                    </ul>
+                </div>
+                <br>
+                <div>
+                    <h4>Sala de espera</h4>
+                    <img src="./resources/images/SalaDeEspera.png" alt="Imagen Sala de Espera">
+                    <p>En esta seccion deberas esperar a que tus amigos se vayan uniendo a la partida, y si eres el administrador del lobby tendras la opcion de darle al boton "Iniciar" cuando consideres que ya hayan entrado todos los participantes, ten en cuenta que por lobby el maximo de jugadores es de 5.
+                        Ademas, en cualquier momento podras salirte de la sala dandole al boton rojo de arriba a la izquierda de la pantalla
+                    </p>
+                </div>
+                <br>
+                <div>
+                    <h4>Juego</h4>
+                    <img src="./resources/images/PantallaDeJuego.png" alt="Imagen Pantalla de juego">
+                    <p>En el momento en el que el admin inicie la partida a todos los jugadores les aparecera la primera palabra por la que compitiran para escribir primero, ademas automaticamente aparecera el campo donde podras ir escribiendo la palabra. Para jugar ten en cuenta lo siguiente: </p>
+                    <ul class="nes-list is-disc">
+                        <li>Para ganar la ronda deberas escribir la palabra correctamente antes que el resto de jugadores</li>
+                        <li>El jugador que mas puntos tenga despues de 10 rondas sera el ganador del lobby</li>
+                        <li>Si la letra que ingresaste es correcta esta se marcara verde</li>
+                        <li>Si la letra que ingresaste es incorrecta esta se marcara roja</li>
+                        <li>Si cometes algun error en una letra de la palabra, las siguientes letras que escribas seran evaluadas como erroneas sin importar si en realidad lo son o no, por lo que para corregir un error deberas ir hasta el punto donde te equivocaste con la tecla de borrado y reintentar el ingreso de letras</li>
+                        <li>En el momento en el que un jugador consiga escribir correctamente la palabra, se le dara el punto de la ronda a el, se pasara a la siguiente ronda y cambiara automaticamente la palabra de todos</li>
+                        <li>En el momento de cambio de palabra se te avisara con efecto de sonido si te llevaste el punto de la ronda o la perdiste</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Resultados del juego</h4>
+                    <!-- <img src="Por definir" alt="Por Definir"> -->
+                    <!-- TODO NO SE TE OLVIDE BRO Por FAVOR -->
+                </div>
+                <button class="nes-btn">Ah vale crack</button>
+            </form>
+        </dialog>
+        <dialog id="credits" class="nes-dialog is-rounded">
+            <form method="dialog">
+                <!-- TODO -->
+                <button class="nes-btn">Ah vale crack</button>
+            </form>
+        </dialog>
+    </div>
+    <div id="register-screen" class="interface-screen nes-container not-in-screen">
+        <button id="register-back-to-menu" class="nes-btn is-error back-btn"><-</button>
         <h2>Ingresa tu Nickname: </h2>
         <input id="nickname" type="text" class="nes-input">
         <div id="join-lobby-section" class="interface-screen not-in-screen">
-            <h3>Ingresa el ID del lobby</h3>
-            <input id="lobby-id" type="text" class="nes-input">
+            <h4>Ingresa el ID del lobby</h4>
+            <input id="lobby-id" type="text" class="nes-input" autocomplete="off">
         </div>
         <button id="set-nickname" class="nes-btn is-success" onclick="register.joinGame($('#nickname').val(), $('#lobby-id').val())">UNIRSE</button>
         <button id="create-lobby" class="nes-btn is-success">CREAR PARTIDA</button>
         <small class="nes-text is-error error-text"></small>
     </div>
     <div id="game-screen" class="container not-in-screen">
+        <button id="game-back-to-menu" class="nes-btn is-error back-btn"><-</button>
         <div class="row">
             <div class="main-player col-6">
                 <div class="player-1 player card nes-container">
@@ -118,19 +191,32 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div id="bottom-game-section">
             <p id="display-lobby-id"></p>
-            <button id="start-game" onclick="player.startGame()" class="nes-btn is-success start-btn not-in-screen">Start</button>
+            <button id="start-game" onclick="player.startGame()" class="nes-btn is-success start-btn not-in-screen">Iniciar</button>
         </div>
     </div>
     <div id="end-game-screen" class="nes-container interface-screen not-in-screen">
-        <h2>GANADOR</h2>
-        <h4 id="winner"></h4>
+        <h2>Tabla de posiciones</h2>
+            <div class="nes-table-responsive">
+                <table  class="nes-table is-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nick</th>
+                            <th>Palabras acertadas</th>
+                            <th>Letras acertadas</th>
+                            <th>Letras erradas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results"></tbody>
+                </table>
+            </div>
         <button id="play-again" class="nes-btn is-warning" onclick="player.backToLobby()">Volver a jugar</button>
-        <button id="back-to-menu" class="nes-btn is-warning">Volver al menu</button>
+        <button id="ending-back-to-menu" class="nes-btn is-warning">Volver al menu</button>
         <small class="nes-text is-error error-text"></small>
     </div>
     <script src="./static/js/enviroment.js"></script>
+    <script src="./static/js/mainMenu/mainMenu.js"></script>
     <script src="./static/js/sockets/socketSetUp.js"></script>
     <script src="./static/js/player/playerClient.js"></script>
     <script src="./static/js/player/player.js"></script>

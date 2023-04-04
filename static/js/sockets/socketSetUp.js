@@ -47,7 +47,6 @@ let socketSetUp = (function () {
     
             _stompClient.subscribe(`/topic/endGame.${lobbyId}`, eventbody => {
                 let event = JSON.parse(eventbody.body);
-                console.log("HOLI");
                 ending.endGame(event);
             });
 
