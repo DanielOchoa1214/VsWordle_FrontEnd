@@ -167,6 +167,11 @@ let player = (function (api) {
         _wordInput.off("input").on("input", () => {
             _sendLetter();
         });
+        _wordInput.click((event) => {
+            event.preventDefault();
+            let caretPosition = _wordInput[0].selectionStart;
+            _wordInput[0].selectionStart = caretPosition;
+        });
     };
 
     _publicFunctions.renderLetter = function (event) {  

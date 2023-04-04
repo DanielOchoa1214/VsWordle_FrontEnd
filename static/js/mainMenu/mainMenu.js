@@ -18,6 +18,7 @@ let mainMenu = (function () {
         $(`#${button}`).on("click", () => {
             $("#main-menu-screen").removeClass("not-in-screen");
             $(`#${from}`).addClass("not-in-screen");
+            $("#lobby-id").val("");
             $(".error-text").text("");
         });
     };
