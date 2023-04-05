@@ -98,11 +98,12 @@ h3{
 
 #bottom-game-section {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-content: center;
     align-items: baseline;
     flex-wrap: wrap;
     margin-block: auto;
+    padding-block: 1rem 0;
 }
 #display-lobby-id {
     font-size: 2rem;

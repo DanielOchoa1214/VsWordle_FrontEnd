@@ -8,6 +8,7 @@ dialog img {
     left: 0;
     width: 50px;
     height: 50px;
+    padding: 0;
 }
 
 #config-btn img {
