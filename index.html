@@ -41,7 +41,7 @@
         <button class="nes-btn is-primary" onclick="$('#instructions')[0].showModal(); $('#instructions').scrollTop('0')">Instrucciones</button>
         <button class="nes-btn is-primary" onclick="$('#credits')[0].showModal(); $('#credits').scrollTop('0')">Creditos</button>
         <button id="config-btn" class="nes-btn">
-            <img src="./resources/images/ConfigBtn.png" alt="ConfigBtn" style="image-rendering: pixelated;">
+            <img src="./resources/images/volume_icon.png" alt="ConfigBtn" style="image-rendering: pixelated;">
         </button>
         <dialog id="instructions" class="nes-dialog is-rounded">
             <form method="dialog">
@@ -105,8 +105,24 @@
             </form>
         </dialog>
     </div>
+    <div id="config-screen" class="interface-screen nes-container not-in-screen">
+        <button id="config-back-to-menu" class="nes-btn is-error back-btn">
+            <img src="./resources/images/back_arrow.png" alt="Back">
+        </button>
+        <h2>Configuracion</h2>
+        <label>
+            Musica: 
+            <input id="music-volume" type="range">
+        </label>
+        <label>
+            SFX: 
+            <input id="sfx-volume" type="range">
+        </label>
+    </div>
     <div id="register-screen" class="interface-screen nes-container not-in-screen">
-        <button id="register-back-to-menu" class="nes-btn is-error back-btn"><-</button>
+        <button id="register-back-to-menu" class="nes-btn is-error back-btn">
+            <img src="./resources/images/back_arrow.png" alt="Back">
+        </button>
         <img src="./resources/images/Titile.svg" alt="vs-wordle" class="title-img">
         <h2>Ingresa tu Nickname: </h2>
         <input id="nickname" type="text" class="nes-input" maxlength="10">
@@ -119,7 +135,9 @@
         <small class="nes-text is-error error-text"></small>
     </div>
     <div id="game-screen" class="container not-in-screen">
-        <button id="game-back-to-menu" class="nes-btn is-error back-btn"><-</button>
+        <button id="game-back-to-menu" class="nes-btn is-error back-btn">
+            <img src="./resources/images/back_arrow.png" alt="Back">
+        </button>
         <div class="row">
             <div class="main-player col-6">
                 <div class="player-1 player card nes-container">
@@ -218,6 +236,7 @@
         <small class="nes-text is-error error-text"></small>
     </div>
     <script src="./static/js/enviroment.js"></script>
+    <script src="./static/js/config/config.js"></script>
     <script src="./static/js/mainMenu/mainMenu.js"></script>
     <script src="./static/js/sockets/socketSetUp.js"></script>
     <script src="./static/js/player/playerClient.js"></script>

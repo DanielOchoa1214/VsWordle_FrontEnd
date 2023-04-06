@@ -10,8 +10,6 @@ let mainMenu = (function () {
                 console.log("Esperando a que el usuario interactue con la pagina para iniciar la musica...");
             });
         }, 3000);
-        // $("#background-music")[0].volume = 0.025;
-        $("#background-music")[0].volume = 0;
     };
 
     let _setBackToMenuListener = (button, from) => {
@@ -58,9 +56,11 @@ let mainMenu = (function () {
         _playBackgroundMusic();
         _setBackToMenuListener("ending-back-to-menu", "end-game-screen");
         _setBackToMenuListener("register-back-to-menu", "register-screen");
+        _setBackToMenuListener("config-back-to-menu", "config-screen");
         _setBackToMenuListener("game-back-to-menu", "game-screen");
         _exitGameWhenLeaving();
         _setPlayListener();
+        config.init();
     };
 
     _publicFunctions.resetMainInput = function () {  
