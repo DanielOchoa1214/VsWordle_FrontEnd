@@ -10,6 +10,7 @@ let mainMenu = (function () {
                 console.log("Esperando a que el usuario interactue con la pagina para iniciar la musica...");
             });
         }, 3000);
+        $("#background-music")[0].volume = 0.3;
     };
 
     let _setBackToMenuListener = (button, from) => {
@@ -38,6 +39,7 @@ let mainMenu = (function () {
             _exitGame();
         };
         $("#game-back-to-menu").on("click", () => {
+            player.endGame();
             _resetMainInput();
             _exitGame();
         });

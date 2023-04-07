@@ -36,7 +36,7 @@
         <audio id="happy-wheels" src="./resources/music/happy-wheels.mp3"></audio>
     </div>
     <div id="main-menu-screen" class="interface-screen nes-container">
-        <img src="./resources/images/Titile.svg" alt="vs-wordle" class="title-img">
+        <img src="./resources/images/titile.svg" alt="vs-wordle" class="title-img">
         <button id="play" class="nes-btn is-primary">Jugar</button>
         <button class="nes-btn is-primary" onclick="$('#instructions')[0].showModal(); $('#instructions').scrollTop('0')">Instrucciones</button>
         <button class="nes-btn is-primary" onclick="$('#credits')[0].showModal(); $('#credits').scrollTop('0')">Creditos</button>
@@ -49,28 +49,30 @@
                 <br>
                 <div>
                     <h4>Menu principal</h4>
-                    <img src="./resources/images/MenuPrincipal.png" alt="Imagen Menu Principal">
+                    <img src="./resources/images/menu_principal.png" alt="Imagen Menu Principal">
                     <p>Esta es la primera pantalla que te encontraras, en ella tienes las siguientes opciones: </p>
                     <ul class="nes-list is-disc">
-                        <li>Oprimir el boton jugar, con el cual te iras a la seccion de registro y empezar a jugar</li>
-                        <li>Oprimir el boton Instrucciones, el cual abrira este dialogo (Pero eso ya lo sabes xd, si no como llegaste aca :O)</li>
+                        <li>El boton jugar, con el cual te iras a la seccion de registro y empezar a jugar</li>
+                        <li>El boton Instrucciones, el cual abrira este dialogo (Pero eso ya lo sabes xd, si no como llegaste aca :O)</li>
+                        <li>El boton Creditos, con el que podras ver la gente bella que hizo este juego :3</li>
+                        <li>El boton de configuracion de audio, con el cual podras ir al menu de configuracion del volumen del audio</li>
                     </ul>
                 </div>
                 <br>
                 <div>
                     <h4>Menu registro</h4>
-                    <img src="./resources/images/Registro.png" alt="Imagen Menu Registro">
+                    <img src="./resources/images/registro.png" alt="Imagen Menu Registro">
                     <p>En esta seccion podras ingresar en el campo el nombre con el que quieres que te reconozcan en las partidas, para ello dentro de esta seccion tienes las siguientes opciones: </p>
                     <ul class="nes-list is-disc">
                         <li>Oprimir el boton rojo para volver al menu principal</li>
-                        <li>Oprimir el boton "Unirse" para habilitar el campo de ingreso del ID del lobby, cuando hayas llenado tu Nick y hayas ingresado un Id valido, vulve a oprimir el boton y si todo sale bien pasaras a la sala de espera</li>
+                        <li>Oprimir el boton "Unirse" para habilitar el campo de ingreso del ID del lobby, cuando hayas llenado tu Nick y hayas ingresado un Id valido, vuelve a oprimir el boton y si todo sale bien pasaras a la sala de espera</li>
                         <li>Oprimir el boton "Crear partida" para crear un nuevo lobby, para ello solo debes proporcionar un Nick y si todo sale bien pasaras a la sala de espera como un admin</li>
                     </ul>
                 </div>
                 <br>
                 <div>
                     <h4>Sala de espera</h4>
-                    <img src="./resources/images/SalaDeEspera.png" alt="Imagen Sala de Espera">
+                    <img src="./resources/images/sala_de_espera.png" alt="Imagen Sala de Espera">
                     <p>En esta seccion deberas esperar a que tus amigos se vayan uniendo a la partida, y si eres el administrador del lobby tendras la opcion de darle al boton "Iniciar" cuando consideres que ya hayan entrado todos los participantes, ten en cuenta que por lobby el maximo de jugadores es de 5.
                         Ademas, en cualquier momento podras salirte de la sala dandole al boton rojo de arriba a la izquierda de la pantalla
                     </p>
@@ -78,7 +80,7 @@
                 <br>
                 <div>
                     <h4>Juego</h4>
-                    <img src="./resources/images/PantallaDeJuego.png" alt="Imagen Pantalla de juego">
+                    <img src="./resources/images/pantalla_de_juego.png" alt="Imagen Pantalla de juego">
                     <p>En el momento en el que el admin inicie la partida a todos los jugadores les aparecera la primera palabra por la que compitiran para escribir primero, ademas automaticamente aparecera el campo donde podras ir escribiendo la palabra. Para jugar ten en cuenta lo siguiente: </p>
                     <ul class="nes-list is-disc">
                         <li>Para ganar la ronda deberas escribir la palabra correctamente antes que el resto de jugadores</li>
@@ -92,8 +94,8 @@
                 </div>
                 <div>
                     <h4>Resultados del juego</h4>
-                    <!-- <img src="Por definir" alt="Por Definir"> -->
-                    <!-- TODO NO SE TE OLVIDE BRO Por FAVOR -->
+                    <img src="./resources/images/fin_del_juego.png" alt="Por Definir">
+                    <p>En esta pantalla apreceran los resultados de la partida, aca podras ver a los jugadores del lobby organizados dependiendo de como les fue (rondas ganadas), el primero de la tabla de posiciones obviamente sera el ganador, pero ademas tambien sabras quien gano la partida dependiendo del efecto de solido que escuches</p>
                 </div>
                 <button class="nes-btn">Ah vale crack</button>
             </form>
@@ -106,10 +108,8 @@
         </dialog>
     </div>
     <div id="config-screen" class="interface-screen nes-container not-in-screen">
-        <button id="config-back-to-menu" class="nes-btn is-error back-btn">
-            <img src="./resources/images/back_arrow.png" alt="Back">
-        </button>
-        <h2>Configuracion</h2>
+        <button id="config-back-to-menu" class="nes-btn is-error back-btn">&#60;</button>
+        <h2>Volumen</h2>
         <label>
             Musica: 
             <input id="music-volume" type="range">
@@ -120,10 +120,8 @@
         </label>
     </div>
     <div id="register-screen" class="interface-screen nes-container not-in-screen">
-        <button id="register-back-to-menu" class="nes-btn is-error back-btn">
-            <img src="./resources/images/back_arrow.png" alt="Back">
-        </button>
-        <img src="./resources/images/Titile.svg" alt="vs-wordle" class="title-img">
+        <button id="register-back-to-menu" class="nes-btn is-error back-btn">&#60;</button>
+        <img src="./resources/images/titile.svg" alt="vs-wordle" class="title-img">
         <h2>Ingresa tu Nickname: </h2>
         <input id="nickname" type="text" class="nes-input" maxlength="10">
         <div id="join-lobby-section" class="interface-screen not-in-screen">
@@ -135,9 +133,7 @@
         <small class="nes-text is-error error-text"></small>
     </div>
     <div id="game-screen" class="container not-in-screen">
-        <button id="game-back-to-menu" class="nes-btn is-error back-btn">
-            <img src="./resources/images/back_arrow.png" alt="Back">
-        </button>
+        <button id="game-back-to-menu" class="nes-btn is-error back-btn">&#60;</button>
         <div class="row">
             <div class="main-player col-6">
                 <div class="player-1 player card nes-container">
@@ -154,7 +150,8 @@
                         <div class="input-group mt-6">
                             <i id="joystick" class="bi bi-joystick input-icon nes-input not-in-screen"></i>
                             <input id="word-input" type="text" class="nes-input form-control not-in-screen"
-                                placeholder="Escribe la palabra !!!" aria-describedby="basic-addon1" autocomplete="off">
+                                placeholder="Escribe la palabra !!!" aria-describedby="basic-addon1" autocomplete="off" 
+                                onmousedown="event.preventDefault();" onkeydown="if(event.keyCode == 37 || event.keyCode == 39) event.preventDefault();">
                         </div>
                     </div>
                 </div>
@@ -216,7 +213,7 @@
         </div>
     </div>
     <div id="end-game-screen" class="nes-container interface-screen not-in-screen">
-        <img src="./resources/images/Titile.svg" alt="vs-wordle" class="title-img">
+        <img src="./resources/images/titile.svg" alt="vs-wordle" class="title-img">
         <h2>Tabla de posiciones</h2>
             <div class="nes-table-responsive">
                 <table  class="nes-table is-bordered">

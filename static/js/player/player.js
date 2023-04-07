@@ -12,10 +12,8 @@ let player = (function (api) {
     let _announceWinner = (imTheWinner) => {
         if(_round !== 0){
             if(imTheWinner) {
-                $("#correct-word")[0].volume = 0.05;
                 $("#correct-word")[0].play();
             } else  {
-                $("#incorrect-word")[0].volume = 0.05;
                 $("#incorrect-word")[0].play();
             }
         }
