@@ -32,6 +32,7 @@ let mainMenu = (function () {
         _wordInput.addClass("not-in-screen");
         _wordInput.val("");
         $("#joystick").addClass("not-in-screen");
+        $("#start-game").addClass("not-in-screen");
     };
 
     let _exitGameWhenLeaving = () => {
