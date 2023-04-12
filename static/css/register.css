@@ -20,4 +20,5 @@ button:hover{
 
 .title-img{
     margin-bottom: 1rem;
+    max-width: 700px;
 }
