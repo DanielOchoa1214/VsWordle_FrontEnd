@@ -150,7 +150,7 @@ let player = (function (api) {
         }, [playerBody]);
     };
 
-    // Funciones publicas
+    //  Funciones publicas
     _publicFunctions.init = function () {
         _wordInput.off("keydown").on("keydown", (event) => {
             let key = event.keyCode || event.charCode;
