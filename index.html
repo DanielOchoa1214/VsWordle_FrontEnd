@@ -190,7 +190,7 @@
                             <i id="joystick" class="bi bi-joystick input-icon nes-input not-in-screen"></i>
                             <input id="word-input" type="text" class="nes-input form-control not-in-screen"
                                 placeholder="Escribe la palabra !!!" aria-describedby="basic-addon1" autocomplete="off" 
-                                onmousedown="event.preventDefault();" onkeydown="if(event.keyCode == 37 || event.keyCode == 39) event.preventDefault();">
+                                onmousedown="event.preventDefault(); $('#word-input').focus()" onkeydown="if(event.keyCode == 37 || event.keyCode == 39) event.preventDefault();">
                         </div>
                     </div>
                 </div>

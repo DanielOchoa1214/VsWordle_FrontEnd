@@ -49,7 +49,7 @@ let player = (function (api) {
 
     let _tryGetNextWord = (letterPos, correct) => {
         if(_currentWord.length === letterPos + 1 && correct) {
-            let word = _wordInput.val();
+            let word = _wordInput.val().toLowerCase();
             api.checkWord(word, _round, _nickname, _lobbyId).then((res) => {
                 if (res) {
                     _round !== 9 ? socketSetUp.getStompClient().send(`/topic/requestNext.${_lobbyId}`, {}, JSON.stringify({nickname: _nickname})) : _endGame();
@@ -69,7 +69,7 @@ let player = (function (api) {
 
     let _sendLetter = () => {
         let letterPos = _wordInput.val().length - 1;
-        let letter = _wordInput.val().slice(-1);
+        let letter = _wordInput.val().toLowerCase().slice(-1);
         let data = {
             nickname: _nickname,
             letterPos: letterPos,
@@ -156,7 +156,6 @@ let player = (function (api) {
             let key = event.keyCode || event.charCode;
             if(key == 8 || key == 46){
                 event.preventDefault();
-                // PROBAR MOVER EL LETTER POS CON EL PC DE CAMILO
                 let letterPos = _wordInput.val().length - 1;
                 _wordInput.val(_wordInput.val().slice(0, -1));
                 _sendDeletion(letterPos);

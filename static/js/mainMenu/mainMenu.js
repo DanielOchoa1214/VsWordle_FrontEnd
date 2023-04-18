@@ -35,6 +35,13 @@ let mainMenu = (function () {
         $("#start-game").addClass("not-in-screen");
     };
 
+    let _resetMainPlayerView = () => {
+        $(".word").text("ESPERANDO");
+        $("#start-game").addClass("not-in-screen");
+        $("#game-screen").addClass("not-in-screen");
+        $(".side-player-panel .player").addClass("available");
+    };
+
     let _exitGameWhenLeaving = () => {
         window.onbeforeunload = function () {  
             _exitGame();
@@ -42,7 +49,9 @@ let mainMenu = (function () {
         $("#game-back-to-menu").on("click", () => {
             player.endGame();
             _resetMainInput();
+            _resetMainPlayerView()
             _exitGame();
+            socketSetUp.disconnect();
         });
     };
 
