@@ -1,0 +1,136 @@
+.player-1 {
+    height: 90vh;
+    width: 100%;
+    border: 10px solid #9e29a0;
+    align-items: center;
+}
+.main-player{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.word{
+    font-size: .6rem;
+    margin-bottom: 0;
+}
+.word-xl{
+    font-size: 1.5rem;
+}
+.word.word-xl span{
+    font-size: 1rem;
+    padding: 1rem 1rem
+}
+.word span {
+    padding: .5vw .5vw;
+    text-transform: uppercase;
+    font-size: .7vw;
+    font-weight: 700;
+    border: 2px solid black;
+    display: inline-block;
+    margin-block: 5px;
+    margin-inline: .1rem;
+}
+.correct-letter {
+    background-color: rgb(132 204 22);
+}
+
+.incorrect-letter {
+    background-color: rgb(244 63 94);
+}
+.side-player-panel .card{
+    max-width: 45%;
+}
+.side-player-panel{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    
+}
+body{
+    height: 100vh;
+    display: flex;
+    place-items: center;
+    background-color: #dedede;
+    box-sizing: border-box;
+}
+#main-player-nick{
+    font-size: 2.2vw;
+    margin-top: 1rem;
+}
+h3{
+    font-size: 1vw;
+    padding-bottom: .5rem;
+    text-align: center;
+}
+.word-input,
+#basic-addon1{
+    border: 2px solid #000;
+    border-radius: 0px;
+}
+.card{
+    border-radius: 0px;
+    padding-block: 1.5rem;
+}
+.input-icon{
+    padding: 1rem;
+    width: auto;
+}
+.form-control:focus{
+    border-color:transparent !important;
+    box-shadow: 8px 8px 0 0.25rem rgba(252, 78, 247, 0.25);
+}
+
+.pokemon-xs{
+    transform: scale(calc(100%/2))
+}
+.icon-box{
+    display: flex;
+    place-content: center;
+}
+
+#bottom-game-section {
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-block: auto;
+    padding-block: 1rem 0;
+}
+#display-lobby-id {
+    font-size: 2rem;
+    margin-block: auto;
+}
+@media (max-width:1000px) {
+    .side-player-panel .word span{
+        padding: .5rem;
+    }
+    .side-player-panel h3{
+        font-size: 1.4vw;
+        padding-bottom: .5rem;
+    }
+    .card{
+        padding-block: .5rem;
+    }
+}
+@media (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm){
+    .nes-input, .nes-textarea {
+        border-image-repeat: initial !important;
+    }
+}
+
+.available {
+    display: none;
+}
+
+.not-in-screen {
+    display: none !important;
+}
