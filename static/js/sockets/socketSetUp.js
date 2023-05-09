@@ -1,6 +1,6 @@
 let socketSetUp = (function () {  
 
-    let _server = enviroment.local;
+    let _server = enviroment.eventServer;
     let _stompClient = null;
 
     let _publicFunctions = {};
