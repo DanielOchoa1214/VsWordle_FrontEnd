@@ -15,8 +15,9 @@
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- <script src="./resources/sockjs.min.js"></script> -->
-    <!-- <script src="./resources/stomp.min.js"></script> -->
+    <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.js"
+        integrity="sha384-o4ufwq3oKqc7IoCcR08YtZXmgOljhTggRwxP2CLbSqeXGtitAxwYaUln/05nJjit"
+        crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="./static/css/register.css">
@@ -35,11 +36,15 @@
         <audio id="game-over" src="./resources/music/game-over.mp3"></audio>
         <audio id="happy-wheels" src="./resources/music/happy-wheels.mp3"></audio>
     </div>
+    <p id="user-account"></p>
     <div id="main-menu-screen" class="interface-screen nes-container">
         <img src="./resources/images/title.png" alt="vs-wordle" class="title-img">
         <button id="play" class="nes-btn is-primary">Jugar</button>
         <button class="nes-btn is-primary" onclick="$('#instructions')[0].showModal(); $('#instructions').scrollTop('0')">Instrucciones</button>
         <button class="nes-btn is-primary" onclick="$('#credits')[0].showModal(); $('#credits').scrollTop('0')">Creditos</button>
+        <button id="login-btn" class="nes-btn is-warning" onclick="loginConfig.SignIn()">
+            <img src="./resources/images/login_icon.png" alt="Login" style="image-rendering: pixelated;">
+        </button>
         <button id="config-btn" class="nes-btn">
             <img src="./resources/images/volume_icon.png" alt="ConfigBtn" style="image-rendering: pixelated;">
         </button>
@@ -271,6 +276,7 @@
         <button id="ending-back-to-menu" class="nes-btn is-warning">Volver al menu</button>
         <small class="nes-text is-error error-text"></small>
     </div>
+    <script src="./static/js/auth/msalConfig.js"></script>
     <script src="./static/js/enviroment.js"></script>
     <script src="./static/js/config/config.js"></script>
     <script src="./static/js/mainMenu/mainMenu.js"></script>
