@@ -8,7 +8,7 @@ let loginConfig = (function () {
             // Full directory URL, in the form of https://login.microsoftonline.com/<tenant-id>
             authority: "https://login.microsoftonline.com/301c0eea-7041-4543-8e95-e1737121c99c",
             // Full redirect URL, in form of http://localhost:3000
-            redirectUri: "arsw-vswordle.eastus.cloudapp.azure.com",
+            redirectUri: "https://arsw-vswordle.eastus.cloudapp.azure.com",
         },
         cache: {
             cacheLocation: "sessionStorage", // This configures where your cache will be stored
